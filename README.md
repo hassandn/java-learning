@@ -123,3 +123,50 @@ public class Hello {
     } 
 }
 ```
+```
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Hello {
+    public static void main(String[] args){
+        final byte monthOfYear = 12;
+        final byte percent = 100;
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("principle: ");
+        int principle = scanner.nextInt();
+
+        System.out.print("Annual Interest Rate: ");
+        // float annualIntrestRate = scanner.nextFloat();
+        float annualIntrestRate = Float.parseFloat(scanner.nextFloat());
+        float monthlyIntrestRate = annualIntrestRate / percent / monthOfYear;
+
+        System.out.print("Period(yearly): ");
+        byte periodOfYear = scanner.nextByte();
+        int peroidOfMonth = periodOfYear * monthOfYear;
+
+        double montgage = principle * Math.pow(monthlyIntrestRate*(1+monthlyIntrestRate), peroidOfMonth) 
+        /
+        Math.pow((1+monthlyIntrestRate), peroidOfMonth)-1;
+        String result =  NumberFormat.getCurrencyInstance().format(montgage);
+        Locale englishLocale = new Locale("en", "US");
+        NumberFormat result = NumberFormat.getCurrencyInstance(englishLocale);
+        System.out.println("Montgage: "+result);
+
+
+    } 
+}
+
+```
+and توی جاوا به صورت زیر است && 
+برای or || هست 
+not is !
+برای شرایط داریم
+```
+if(){
+}
+else if (){}
+else
+```
+میتونی بعد از else if چیزی نزاری و باز هم کای میکنه این کد 

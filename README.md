@@ -102,4 +102,24 @@ public class Hello {
 implicit casting
 byte > short > int > long > float > double
 دیتا کانورت میشن 
- 
+ ما برای اینکه بتونیم با اعداد کار هایی رو انجام بدیم کتابخونه ای داریم به اسم NumberFormat مثلا برای اینکه مقدار پول بزنیم یا درصد بدست بیاریم 
+برای گرفتن دیتا از کاربر ما میتونیم دستور زیر استفاده کنیم 
+
+
+
+```
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Hello {
+    public static void main(String[] args){
+        Scanner scanner  = new Scanner(System.in);
+        System.out.print("write your name please =>");
+        String userName = scanner.nextLine();
+        System.out.print("write your age please =>");
+        byte age = scanner.nextByte();
+        System.out.println("hello "+ userName + " your age is "+ age);
+    } 
+}
+```

@@ -170,3 +170,216 @@ else if (){}
 else
 ```
 میتونی بعد از else if چیزی نزاری و باز هم کای میکنه این کد 
+یک راه حل برای اینکه بهتر از if statement استفاده کنیم به صورت زیر هست فرض کن میخوایم با دونستن بالانس اکانت بانکی یک نفر بفهمیم که آیا بالانس خوبی داره یا نه 
+```
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Hello {
+    public static void main(String[] args){
+        int balance = 120_000;
+        boolean hasGoodBalance;
+        if (balance>100_000){
+            hasGoodBalance = true;
+        }
+        else{
+            hasGoodBalance = false;
+        }
+    } 
+}
+```
+ی راه دیگه اینکه به صورت پیشفرض اون رو فالس بزاریم و اگه شرایط درست بود ترو بشه 
+و یک شرایط دیگم داریم که ی استیتمنت بزاریم جلوی اون بولین که اگه درست بود ترو باشه اگرم غلط منفی
+```
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Hello {
+    public static void main(String[] args){
+        int balance = 120_000;
+        boolean hasGoodBalance = (balance>100_000);
+    } 
+}
+
+```
+ی راه دیگه برای خلاصه کردن
+مثلا فرض کن اگه شرایط برقرار بود میخوای که یک چیزی اساینمنت بشه به یک متغیر برای همیمن ما داریم :
+مثلا میخوای که کاربر اگه بالانس اکانتش بالا تر از 100 هزار تا بود بره توی فرست کلاس اگه نه هم میره تو اکانومی برای اینکار ما میتونیم به روش خیلی ساده که اینطور هست پیش بریم 
+```
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Hello {
+    public static void main(String[] args){
+        int balance = 120_000;
+        String useerClass;
+        if (balance > 100_000){
+            useerClass = "first";
+        }
+        else{
+            useerClass = "economy";
+        }
+    } 
+}
+```
+ولی راه بهتری که برای این وچود داره این هست :
+```
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Hello {
+    public static void main(String[] args){
+        int balance = 120_000;
+        String useerClass = (balance>100_000) ? "first" : "economy";
+    
+    } 
+}
+
+```
+اینجا میگه اگه شرط داخل پرانتز درست بود ما خواهیم داشت که ؟ و اگه غلط بود ما خواهیم داشت که : 
+
+برای استفاده از 
+```
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Hello {
+    public static void main(String[] args){
+        String role = "admin";
+        if (role == "admin"){
+            System.out.println("you are an admin "+ role);
+        }
+        else if (role == "moderator"){
+            System.out.println("you are a moderator");
+        }
+        else{
+            System.out.println("you are ghuest");
+        }
+
+
+        switch (role) {
+            case "admin":
+                System.out.println("");
+                break;  
+            case "moderator":
+                System.out.println("you are a moderator");
+                break;
+
+            default:
+                System.out.println("you are ghuest");
+                // break;
+        }
+    } 
+}
+
+```
+اینم میشه استفاده از سوییچ کیس
+```
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Hello {
+    public static void main(String[] args){
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("print the number:");
+        byte userChoice = scanner.nextByte();
+
+        final boolean divisibleByThree = (userChoice % 3 ==0) ? true :false;
+        final boolean divisibleByFive = (userChoice % 5 ==0) ? true : false;
+        if (divisibleByFive && divisibleByThree){
+            System.out.println("BuzzFizz");
+        }
+        else if (divisibleByFive){
+            System.out.println("Buzz");
+        }
+        else if (divisibleByThree){
+            System.out.println("Fizz");
+        }
+        else{
+            System.out.println(userChoice);
+        }
+
+    } 
+}
+
+```
+برای حلفه های for ما داریم 
+```
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Hello {
+    public static void main(String[] args){
+        for (int i = 10; i>5;i--){
+            System.out.println("hello world "+ i);
+        }
+
+    } 
+}
+```
+فرق while با for توی این هست که ما توی while نمیدونیم چقدر کار لازم داریم مثل وقتی که کاربر تا وقتی کوییت رو نزده کد باید کار کنه
+```
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Hello {
+    public static void main(String[] args){
+        Scanner scanner = new Scanner(System.in);
+        String input ="";
+        while (!input.equals("exit")) {
+            input = scanner.next().toLowerCase();
+            // String.format(null, input,args);  
+            System.out.println(input);       
+        }
+
+    } 
+}
+```
+ما do while هم داریم که حذاقل یک بار اجرا میشه 
+چون اول انجام میده و در آخر شرط رو بررسی میکنه
+```
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Hello {
+    public static void main(String[] args){
+        Scanner scanner = new Scanner(System.in);
+        String input ="";
+        do {
+            input = scanner.next().toLowerCase();
+            // String.format(null, input,args);  
+            System.out.println(input);   
+        }
+        while(!input.equals("exit"));
+    } 
+}
+```
+مثلا اینجا وقتی مینویسی exit exit رو مینویسه و اجراش تموم میشه
+مبحث break , countinue
+به این صورت هست که وقتی کد به بریک میخوره کنکل میکنه ادامه کار رو 
+ولی وقتی کانتینیو میخوره برمیگرده و بقیه کد های بعدشو ایگنور میکنه و برمیگرده به اول حلقه
+
+ما for each loop هم داریم 
+```
+public class Hello {
+    public static void main(String[] args){
+        String[] fruits = {"apple","orange","straeberry"};
+        for (int i = 0; i<fruits.length;i++){
+            System.out.println(fruits[i]);
+        }
+        for (String friut : fruits){
+            System.out.println(friut);
+        }
+    }
+}
+```
+فرقشون اینکه ما تو روش اول میونیم برعکس هم بخونیمشون و دترسی به ایندکس ها داشته باشیم ولی توی دومی فقط همینطوری اسم ها رو صدا میزنه 

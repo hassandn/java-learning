@@ -383,3 +383,66 @@ public class Hello {
 }
 ```
 فرقشون اینکه ما تو روش اول میونیم برعکس هم بخونیمشون و دترسی به ایندکس ها داشته باشیم ولی توی دومی فقط همینطوری اسم ها رو صدا میزنه 
+```
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Hello {
+    public static void main(String[] args) {
+
+        int principal = (int) getInputFromUser("Principle =>", 1_000, 1_000_000);
+        float annualIntrest = (float) getInputFromUser("annualIntrest =>", 0, 30);
+        byte years = (byte) getInputFromUser("Period(years) =>", 0, 30);
+
+        String montgage = calculateMortgage(principal, annualIntrest, years);
+        System.out.println("MONTGAGE \n________\nMontly Payment: "+montgage +"\nPAYMENT SCHEDULE\n_______________");
+        paymentSchedule(180000, 1_822.41);
+    }
+
+    public static double getInputFromUser(String inputText, double min, double max) {
+        Scanner scanner = new Scanner(System.in);
+        scanner.useLocale(Locale.US);
+        double value;
+        while (true) {
+            System.out.print(inputText);
+            value = scanner.nextDouble();
+            if (min < value && value <= max) {
+                break;
+            }
+            System.out.print("value must be between " + min + " and " + max);
+            continue;
+
+        }
+        return value;
+    }
+
+    public static String calculateMortgage(int principal, float annualIntrest, byte years) {
+        final byte MONTHOFYEAR = 12;
+        final byte PERCENT = 100;
+        int numberOfPayments = years * MONTHOFYEAR;
+        double monthlyInterest = (annualIntrest / PERCENT) / MONTHOFYEAR;
+        double intermediate = 1 + monthlyInterest;
+        double mortgage = principal * (monthlyInterest * Math.pow(intermediate, numberOfPayments))
+                / (Math.pow(intermediate, numberOfPayments) - 1);
+
+        String montgageCurrency = NumberFormat.getCurrencyInstance(Locale.US).format(mortgage);
+        return montgageCurrency;
+    }
+
+    public static void paymentSchedule(int principal, double montgage){
+        double principalSchedule = principal;
+        while (principalSchedule != 0) {
+            
+            principalSchedule = principalSchedule - montgage;
+            if (principalSchedule <=0){
+                break;
+            }
+            System.out.println(NumberFormat.getCurrencyInstance(Locale.US).format(principalSchedule));
+
+        }
+    }
+}
+
+```
+تمرینی که داد توی ویدیو ها 

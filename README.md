@@ -471,4 +471,178 @@ public class TextBox {
 }
 ```
 توی متد اول برای اینکه فیلدمون رو مشخص کنیم کدونه از دیس استفاده میکنیم ولی توی متد کلیر چون پارامتری نمیگیریم از دیس استفاده نمیکنیم چون معلومه با کدومشون کار دایرم 
-توی جاوا باید هر کلاس رو توی یک فایل دیگه بسازیم که این بهمون کمک میکنه کدامون رو بهتر مرتب کنیم
+توی جاوا باید هر کلاس رو توی یک فایل دیگه بسازیم که این بهمون کمک میکنه کدامون رو بهتر مرتبکنیم
+خب حالا فرض کن که ما تکست رو هیچی مقدار بهش ندادیم مشکل اینجا شروع میشه که وقتی خواستیم مثلا خروجی رو آپرکیس نشون بدیم چون Null برمیگردونه به مشکل برخواهیم خورد 
+برای اینکه به این مشکل برنخوریم بهش یک مقدار دیفالت میدیم 
+```
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args) {
+        var txt1 = new TextBox();
+        txt1.setText("hassandn");
+//        System.out.print(txt1.text);
+
+        var txt2 = new TextBox();
+        txt2.setText("hassandn");
+        
+
+    }
+}
+
+
+```
+میتونستیم به حای var از TextBox استفاده کنیم که البته استفاده از این باعث میشه که آدم گیج بشه برای همین از var استفاده میکنن
+جاوا گاربیج کالکتور داره مبحث الوکیتش اینطوری هست که ما یکی stack داریم و یکی heap داره توی رفرنس تایپ ها اصله متغیر توی هیپ هستن و پوینترشون توی استک هست 
+وقتی دوتا پیونتر به یک خونه ارجاع داشته باشن خوده جاوا این قضیه رو هندل میکنه که که مشکلاتی مثل ارجاع معلق پیش نیان
+```
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args) {
+        int baseSalary = 50_000;
+        int hourlyRate = 20;
+        int extraHour  = 10;
+        int wage = calculateSalary(baseSalary,hourlyRate,extraHour);
+        System.out.println(wage);
+    }
+    public static int calculateSalary(int baseSalary, int hourlyRate, int extraHour){
+        int result = baseSalary + (hourlyRate * extraHour);
+        return  result;
+    }
+}
+```
+به کد بالا میگن کده procedual یا رویه ای بعنی برای هر کار متد صدا بزنیم و هی بهشون پارامتر بدیم 
+## encapsulation
+Bundle the data and methods that operate on the data in a sigle unit.
+```
+package com.hassandn;
+
+public class Employee {
+    public int baseSalary ;
+    public int hourlyRate ;
+    public int extraHour   ;
+
+    public int calculateSalary(int extraHour){
+        int result = baseSalary + (hourlyRate * extraHour);
+        return  result;
+    }
+}
+
+```
+توی این کد کلاس امیپلوی رو داریم دلیل اینکه اکسترا اور رو گرفتیم برای این هست که ساعات هر بار فرق خواهند کرد 
+و این هم کد مین ما هست 
+```
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args) {
+
+        var employee = new Employee();
+        employee.baseSalary = 60_000;
+        employee.hourlyRate = 60;
+        int wage = employee.calculateSalary(15);
+        System.out.println(wage);
+
+    }
+
+}
+```
+## getters and setters
+خب اینجا یک مشکل داریم چون الان ما میتونیم مستقیم بیس سلری رو عوض کنیم و یک نکته دیگم هست که ما الان نمیتونیم ولیدت کنیم برای همین ما از getters and setters استفاده میکنیم 
+برای مثال کد های بالا که اصلاح شدن به صورت زیر هستن
+```
+package com.hassandn;
+
+public class Employee {
+    private int baseSalary ;
+    private int hourlyRate ;
+    public int extraHour   ;
+
+    public int calculateSalary(int extraHour){
+        int result = baseSalary + (hourlyRate * extraHour);
+        return  result;
+    }
+    public void setBaseSalary(int baseSalary){
+        if (baseSalary<=0)
+            throw new IllegalArgumentException("Salary Must be a positive number.");
+        this.baseSalary = baseSalary;
+    }
+
+    public int getBaseSalary(){
+        return baseSalary;
+    }
+
+    public void  setHourlyRate(int hourlyRate){
+        if (hourlyRate<=0)
+            throw new IllegalArgumentException("hourlyRate must be a positive number.");
+        this.hourlyRate = hourlyRate;
+    }
+    public int getHourlyRate(){
+        return hourlyRate;
+    }
+
+}
+
+```
+```
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args) {
+        var employee = new Employee();
+        employee.setBaseSalary(60_000);
+        employee.setHourlyRate(58);
+        int wage = employee.calculateSalary(35);
+        System.out.println(wage);
+
+    }
+
+}
+
+
+```
+## Abstracion
+Reduce complexity by hiding unneccessary details
+## coupling 
+یعنی چقدر یک کلاس به کلاس دیگه وابسته هست هر جقدر وابتسگیه بیشتر باشه کاپلینگ بیشتره مثلا تو مثال بالا داریم میتونیم getter ها رو پرایوت کنیم و دسترسی بهشون رو قط کنیم چون کارشون نداریم و کاپلینگ رو کمتر میکنن 
+برای اینکه کاپلینگ بیشتر نشه و از ابسترکشن استقاده کنیم فقط از چیزایی استفاده میکنیم که نیاز داریم 
+یک مثالش مثل کنترل تلوزیون هست ما برامون مهم نیست چجوری وقتی دکمه والیوم رو زدیم عوض میشه ما فقط میخوایم عوض بشه برای همین این قسمت ها رو عوض میکنیم برای مثال دیگه این مدل رو برات میارم 
+ما یک کلاس داریم که مثل مرورگر قراره سرچ کنه برای فراخونیش ما فقط جواب رو میخوایم دیگه کاری به متد هایی که باید کار کنن تا جواب بیاد نداریم
+```
+package com.hassandn;
+
+public class Browser {
+    public void navigation(String address){
+        String ip = findIpAddress(address);
+        String htmlResult = sendHttpRequeset(ip);
+        System.out.println(htmlResult);
+    }
+
+    private String sendHttpRequeset(String ip) {
+        return "<html></html>";
+
+    }
+
+    private String findIpAddress(String address) {
+        return "127.0.0.1";
+    }
+}
+```
+```
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args) {
+        var browser = new Browser();
+        browser.navigation("www.iran.org");
+    }
+
+}
+
+```
+اینجا وقتی توی مین مینزیم برازر دات دیگه کاری به متد های ریز نداریم 
+## constructors
+وقتی یک شئ داده جدید میسازیم زبان میاد و اون شئ رو میسازه یک راه برای اینکه کاربر رو مجبور کنیم اونطور که میخوام حتما دیتا رو وارد کنه استفاده از کانستراکتور ها هست برای بهتر شده کد زیر داریم 
+
+

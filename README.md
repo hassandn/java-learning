@@ -645,4 +645,42 @@ public class Main {
 ## constructors
 وقتی یک شئ داده جدید میسازیم زبان میاد و اون شئ رو میسازه یک راه برای اینکه کاربر رو مجبور کنیم اونطور که میخوام حتما دیتا رو وارد کنه استفاده از کانستراکتور ها هست برای بهتر شده کد زیر داریم 
 
+```
+package com.hassandn;
 
+public class Employee {
+    private int baseSalary ;
+    private int hourlyRate ;
+//    public int extraHour   ;
+
+    public Employee(int baseSalary,int hourlyRate){
+        setBaseSalary(baseSalary);
+        setHourlyRate(baseSalary);
+    }
+```
+## method overloading
+یعنی دو تا تابع با یک اسم باشن و با پیاده سازی های مختلف یعنی برای هر سناریو ما ورودوی بتونیم بگیریم
+
+```
+    public int calculateSalary(int extraHour){
+        int result = baseSalary + (hourlyRate * extraHour);
+        return  result;
+    }
+
+    public int calculateSalary(){
+        int result = baseSalary;
+        return  result;
+    }
+```
+## Cunstructor Overloading
+اینجا ما داریم که متدی رو صدا میزنیم که مثلا hourly rate نداشته باشه پس میتونیم خودشو اینطوری صدا کنیم و hourly rate رو صفر بزاریم
+```
+    public Employee(int baseSalary){
+        this(baseSalary,0);
+    }
+
+    public Employee(int baseSalary,int hourlyRate){
+        setBaseSalary(baseSalary);
+        setHourlyRate(baseSalary);
+    }
+```

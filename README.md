@@ -695,3 +695,219 @@ Employee.getNumberOfEmployees
 ```
 نکته ای که هست اینکه ما فقط میتونیم به فیلد های استاتیک دسترسی داشته باشیم و به بقیه چیز ها نمیتونیم دسترسی داشته باشیم چون اونها اینتستنس هستن و برای دسترسی بهشون ما نیاز داریم یک آبجکت بسازیم 
 ما میتونیم برای ریفکتور کردن از شورت کات های خوده انتلیج استفاده کنیم که خیلی بی خطر کد ها رو جا به جا میکنه و صدا زدنشون رو اوکی میکنه 
+پروژه ری فکتور کردن برنامه 
+```
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args){
+        double principal = Console.getInformation("Please enter your principal",1_000, 1_000_000);
+        double annualInterest = Console.getInformation("Please enter your annualinterest",0,30);
+        int period = (int) Console.getInformation("Please enter the period(years)",0,30);
+
+        var mortgage = new MortgageCalculator(period,annualInterest,principal);
+        double result = mortgage.calculateMortgage();
+        System.out.println(result);
+        MortgageReporter.outputFormat(mortgage.getRemainingBalances());
+
+    }
+}
+```
+```
+package com.hassandn;
+
+import java.util.Locale;
+import java.util.Scanner;
+
+public class Console {
+    public static double getInformation(String prompt, int min, int max){
+        Scanner scanner = new Scanner(System.in);
+        scanner.useLocale(Locale.US);
+        while (true) {
+            System.out.print(prompt + ":=> ");
+            double userInput = scanner.nextDouble();
+            if (min < userInput && userInput <= max){
+                return userInput;
+            }
+            else {
+                throw new IllegalAccessError("your response have to be between " + min + " and " + max + "!");
+
+            }
+
+        }
+    }
+}
+```
+```
+package com.hassandn;
+
+public class MortgageCalculator {
+    private final byte MONTHOFYEAR = 12;
+    private final byte PERCENT = 100;
+    private int period;
+    private double annualInterest;
+    private double principal;
+
+    private int numberOfPayments;
+    private double monthlyInterestRate;
+
+    public MortgageCalculator(int period, double annualInterest, double principal){
+        this.principal = principal;
+        this.annualInterest = annualInterest;
+        this.period = period;
+
+        calculateMothOfPayments();
+        calculateMonthlyInterest();
+    }
+
+    private void calculateMothOfPayments(){
+        numberOfPayments = MONTHOFYEAR * period;
+    }
+
+    private void calculateMonthlyInterest(){
+        monthlyInterestRate = annualInterest / PERCENT / MONTHOFYEAR;
+    }
+
+    public double calculateMortgage(){
+
+        double mortgage = principal * (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments))
+                / (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+        return  mortgage;
+    }
+
+    public double calculateBalance(double numberOfPaymentsMade) {
+
+        double balance = principal
+                * ( Math.pow(1 + monthlyInterestRate, numberOfPayments)
+                - Math.pow(1 + monthlyInterestRate, numberOfPaymentsMade))
+                / (Math.pow(1+ monthlyInterestRate, numberOfPayments) - 1);
+
+        return balance;
+    }
+
+    public double[] getRemainingBalances(){
+        double[] romainBalance = new double[numberOfPayments];
+        for (int months = 1; months - 1 < romainBalance.length; months++) {
+            romainBalance[months - 1] = calculateBalance(months);
+        }
+        return romainBalance;
+    }
+
+}
+```
+```
+package com.hassandn;
+
+import java.text.NumberFormat;
+import java.util.Locale;
+
+public class MortgageReporter {
+    static double mortgage;
+    public MortgageReporter(double mortgage){
+        this.mortgage = mortgage;
+    }
+
+    public static void outputFormat(double[] remainBalance){
+        System.out.println(mortgage);
+        System.out.println("--------");
+
+        for (int i = 0; i < remainBalance.length; i++) {
+            convertToCurrency(remainBalance[i]);
+        }
+
+    }
+    private static void convertToCurrency(double currency){
+        String result;
+        result = NumberFormat.getCurrencyInstance(Locale.US).format(currency);
+        System.out.println(result);
+
+    }
+}
+```
+# inheritance
+به کلاس پدر بیس یا سوپر نیر گفته میشه به کلاس چاید هم ساب گفته میشه 
+برای اینکه یک کلاس از کلاس دیگه ارث ببره از این روش استفاده میکنیم 
+```
+package com.hassandn;
+
+public class UIControl {
+    private boolean isEnabled = true;
+
+    public void getEnabled(){
+        isEnabled = true;
+    }
+    public void getInabled(){
+        isEnabled = false;
+    }
+    public boolean isEnabled(){
+        return isEnabled;
+    }
+}
+```
+```
+package com.hassandn;
+
+public class TextBox extends UIControl {
+    public String text = "";
+
+    public void setText(String text){
+        this.text = text;
+
+    }
+    public void clear(){
+        text = "";
+    }
+}
+```
+```
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args) {
+        var textbox = new TextBox();
+        textbox.
+    }
+
+}
+```
+اینجا وقتی تکست باکس رو میزنی متد های کلاس یو ای کنترلر هم میاد 
+توی جاوا به صورت اتوماتیک کلاس ها از کلاس آبجکت ارث میبرن این کار هم خوده کامپایلر انجام میده 
+فیلد هایی که کلاس آبجکت داره به این صورت هستن 
+```
+hashCode
+toString
+equals
+```
+### constructors
+توی کلاس پرنت ما میتونیم کانستراکتور درست کنیم 
+```
+public class UIControl {
+    public UIControl() {
+        System.out.println("hello this is UIController");
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        var textbox = new TextBox();
+//        textbox.
+    }
+
+}
+
+```
+اینجا وقتی از تکست باکس شئ درست میکنیم پیام میاده 
+حالا اگه ما کانستراکترمون پارامتری بگیره که ما نیاز داریم در پرنت باید از استیتمنت super استفاده کنیم
+```
+private boolean isEnabled = true;
+        public UIControl(boolean status) {
+            this.isEnabled = status;
+            System.out.println("hello this is UIController");
+
+        }
+
+public TextBox() {
+        super(true);
+        System.out.println("this is text box ");
+
+    }
+```

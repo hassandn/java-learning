@@ -911,3 +911,26 @@ public TextBox() {
 
     }
 ```
+ما یک اکسس مدیفایر دیگه داریم به اسم پروتکتد که به تمام موجودیت های داخل پکیج هستن 
+اگه برای فیلدی اکسس مادیفایر نزاری به صورت پیشفرض میشه پروتکتد 
+## overriding
+یک مثال از اور راید هست وقتی ما از toString() استفاده میکنیم اون میاد و ادرس رو به صورت string میتونیسه و اگه خواسته باشیم چیزه خاصه دیگه ای اضافه کنیم خواهیم داشت که :
+برای اینکه اور رایدشون کنیم باید بالاش از انونیشن ها استفاده کنیم @Override
+```
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args) {
+        var textbox = new TextBox();
+        textbox.setText("bugatti");
+        System.out.println(textbox.toString());
+    }
+
+}
+
+  @Override
+    public String toSting(){
+        return text;
+    }
+```
+انونیشن ها برای این هستن که به کامپایلر جاوا بگیم ما اطلاعات اضافه تری داریم 

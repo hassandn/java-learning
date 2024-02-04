@@ -934,3 +934,116 @@ public class Main {
     }
 ```
 انونیشن ها برای این هستن که به کامپایلر جاوا بگیم ما اطلاعات اضافه تری داریم 
+## upcasting and downcasting 
+رابطه is a داریم ما توی کستینگ 
+upcasting : Casting an Object  to one of its super types
+downcasting : Casting an Object to one of its sub types
+آپ کستینگ یعنی از کلاس بالایی چیزی رو که داره صدا بزنه مثلا این 
+```
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args) {
+        var textBox = new TextBox();
+        show(textBox);
+    }
+    public static void show(UIControl uiControl){
+        uiControl.
+        System.out.println(uiControl);
+    }
+
+}
+
+```
+اینجا ما تکست باکس رو دادیم و متد ما پارامتر ورودیش یو ای کنترلر هست اما ما بهش تکست باکس رو دادیم وقتی بخوایم از uiControl ببنیم چه متد هایی داره میبینم که فقط متد های یو ای کنترلر میاد 
+اگه بخوایم که از متد های اون کلاس که اوردیم استفاده کنیم از این استفاده میکنیم برای
+```
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args) {
+        var textBox = new TextBox();
+        show(textBox);
+    }
+    public static void show(UIControl uiControl){
+        var control = (TextBox) uiControl;
+        control.setText();
+        System.out.println(uiControl);
+    }
+
+}
+```
+توی این کد داریم داون کستینگ انجام میدیم حالا اینجا یک مشکل پیش میاد ما اگه این رو پیاده سازی کرده باشیم ولی ما بهش آبجکت کلاس یو ای کنتلر رو بدیم اینطوری به خطا بر میخوریم که یو ای text box رو نداره برای حل این مشکل ما میتونیم از instanceof استفاده کنیم 
+```
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args) {
+        var textBox = new TextBox();
+        var uictrl = new UIControl(true);
+        show(textBox);
+        show(uictrl);
+    }
+    public static void show(UIControl uiControl){
+        var control = (TextBox) uiControl;
+        control.setText("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSssUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUIIIIIIIIIIIITSTTSTI");
+        System.out.println(uiControl);
+    }
+
+}
+```
+```
+Exception in thread "main" java.lang.ClassCastException: class com.hassandn.UIControl cannot be cast to class com.hassandn.TextBox (com.hassandn.UIControl and com.hassandn.TextBox are in unnamed module of loader 'app')
+	at com.hassandn.Main.show(Main.java:11)
+	at com.hassandn.Main.main(Main.java:8)
+```
+راه حل به صورت زیر هست 
+```
+package com.hassandn;
+public class Main {
+    public static void main(String[] args) {
+        var textBox = new TextBox();
+        var uictrl = new UIControl(true);
+        show(textBox);
+        show(uictrl);
+    }
+    public static void show(UIControl uiControl){
+        if (uiControl instanceof TextBox) {
+            var control = (TextBox) uiControl;
+            control.setText("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSssUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUIIIIIIIIIIIITSTTSTI");
+        }
+        System.out.println(uiControl);
+    }
+}
+```
+ما اگه توی کد بزنیم == بین دو تا شئ که داده هاشون یکی هستن فالس میده این حتی برای equals هم همینطوره 
+برای اینکه دوتا آبجکت رو بتونی با هم میتونی از شورت کات هایی که خوده ای دی ای داره استفاه کنی و متد های equals و hash code رو اورراید کنی
+```
+package com.hassandn;
+
+import java.util.Objects;
+
+public class Point {
+    private int x;
+    private int y;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+        return x == point.x && y == point.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
+
+    //    @Override
+//    public boolean equals(Object obj) {
+//        return super.equals(obj);
+//    }
+}
+```
+ی راه دیگشم که خودت بتونی اون رو پیاده سازی کنی به این صورت هست  

@@ -1047,3 +1047,223 @@ public class Point {
 }
 ```
 ی راه دیگشم که خودت بتونی اون رو پیاده سازی کنی به این صورت هست  
+```
+@Override
+    public boolean equals(Object obj){
+        var other = (Point) obj;
+        return  other.x == x && other.y ==y;
+    }
+```
+اینجا چون میتونه هر شئ ای بره داخل این متد ما میتونیم برای جلوگیری از اینکه هر آبجکتی داخلش بره به جز آبجکت های مجاز یک شرط میزاریم
+```
+    @Override
+    public boolean equals(Object obj){
+        if (!(obj instanceof Point))
+            return false;
+        var other = (Point) obj;
+        return  other.x == x && other.y ==y;
+    }
+```
+وقتی ما equals رو اورراید کردیم باید hash code رو هم باید اورراید کنیم 
+```
+@Override
+    public int hashCode() {
+        return Objects.hash(x,y);
+    }
+```
+# polymorphism
+ما دو نوع پولی مورفیسم داریم یکی 
+compile time 
+runtime
+کامپیال تایم همون اوررایدینگ هستش 
+ران تایم همون پلی مورفیسم خودمون هست 
+فک کن دو تا کلاس داریم که میخوایم از کلاس یو ای کنتلر ارث بری کنن هردوشون 
+ولی یک مشکل وجود داره توی تابع مین نمیتونیم بنویسیم که اگه آبجکت ما فلان چیز بود پس ui render اون کلاس رو اجرا کن اینجوری هی مجبوریم با هر کلاسی که اضافه میکنیم برای ارث بری اون رو بهش اضافه کنیم 
+بهترین کار اینکه برای 
+```
+package com.hassandn;
+
+public class UIControl {
+    private boolean isEnabled = true;
+        public UIControl(boolean status) {
+            this.isEnabled = status;
+            System.out.println("hello this is UIController");
+
+        }
+        public void render() {
+
+        }
+
+
+    public void getEnabled(){
+        isEnabled = true;
+    }
+    public void getInabled(){
+        isEnabled = false;
+    }
+    public boolean isEnabled(){
+        return isEnabled;
+    }
+
+//    public abstract String toSting();
+}
+package com.hassandn;
+
+public class TextBox extends UIControl {
+    public String text = "";
+
+    @Override
+    public String toString(){
+        return this.text;
+    }
+
+    @Override
+    public void render() {
+        System.out.println("text box implementation ui");
+    }
+
+    public TextBox() {
+        super(false);
+        System.out.println("this is text box ");
+
+    }
+
+    public void setText(String text){
+        this.text = text;
+
+    }
+    public void clear(){
+        text = "";
+    }
+}
+package com.hassandn;
+
+public class CheckBox extends UIControl{
+
+    public CheckBox(){
+        super(true);
+    }
+
+    @Override
+    public void render() {
+        System.out.println("this is check box implementation ui");
+    }
+}
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args) {
+        UIControl[] controls = {new TextBox(), new CheckBox()};
+        for (var control : controls){
+            control.render();
+        }
+    }
+
+}	
+```
+## abstrac
+ابسترک ماله وقتی هست که یک چیز معمول رو میخوایم بدیم که بقیه بنویسن و پیاده سازی کنن مثلا ما رندر کلاس uicontrol رو نداریم و اصلا مفهومی نداره ولی برای تکست باکس و چک باکس داریم این موضوع رو 
+ما برای اینکه یک متد رو بگیم ابسترک هست از کلمه abstract استفاه میکنیم 
+```
+package com.hassandn;
+
+public abstract class UIControl {
+    private boolean isEnabled = true;
+        public UIControl(boolean status) {
+            this.isEnabled = status;
+            System.out.println("hello this is UIController");
+
+        }
+        public abstract void render() ;
+
+
+    public void getEnabled(){
+        isEnabled = true;
+    }
+    public void getInabled(){
+        isEnabled = false;
+    }
+    public boolean isEnabled(){
+        return isEnabled;
+    }
+
+//    public abstract String toSting();
+}
+```
+حالا بقیه کلاس هایی که از این ارث میبرن باید رندر رو پیاده سازی کنن
+و اگه یکی رو نخواستیم پیاده سازی کنیم خواهیم داشت 
+```
+@Override
+    public abstract void render();
+```
+## final classes and methods
+برای وقتی هست که میخوایم کلاس رو کسی نتونه اورراید کنه و کاره مهمی داریم برای مثال داریم یک استیت رو در دیتا بیس عوض میکنیم 
+این برای متد ها هم به همین صورت هست 
+لول ارث بریت نهایت تا سه مرحله باشه
+## multiple inheritance
+
+## oop concepts => 1. Encapsulation 2. Abstraction 3. polymorphism
+# YANGI (you aren't gonna need it)
+# interfaces
+we use interfaces to build loosely-coupled, extensible, tastable applications.
+interfaces : what should be done
+classes : how it should be done
+فرض کن که ما دو تا کلاس داریم کلاس a و کلاس b کلاس ای از کلاس بی ارث بری میکنه اگه ما کد کلاس بی رو تغییر بدیم به مشکل باید کلاس ای هم تغییر بدیم ولی خب اینجا زیاد ما اذیت نمیشیم ولی اگه برنامه ما از صدها یا هزاران ماژول ساخته شده باشه اینجاست که ما به مشکل برخورد خواهیم کرد برای همین از یک واسطه استفاده میکنیم به اسم اینترفیس ها 
+
+
+```
+package com.hassandn;
+
+public class TaxCalculator {
+    private double taxabeleIncome;
+
+    public TaxCalculator(double taxabeleIncome) {
+        this.taxabeleIncome = taxabeleIncome;
+    }
+
+    public double calculateTax(){
+        return taxabeleIncome * 0.3;
+    }
+}
+package com.hassandn;
+
+public class TaxReporter {
+    TaxCalculator taxCalculator = new TaxCalculator(100_000);
+
+    public void show(){
+        System.out.println(taxCalculator.calculateTax());
+    }
+
+}
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args) {
+        var taxreporter = new TaxReporter();
+        taxreporter.show();
+    }
+
+}
+```
+ما اینجا مشکل داریم که ریپورتر ما خیلی وابسته هست به کلکیولیترمون 
+برای نام گذاری اینترفیس هامون توی c# اوله اسمه ماژول ای بزرگ میزارن ولی توی جاوا میتونیم از چیزای مثل 
+Can...
+.....Able
+این اسم گذاری ها رو استفاه میکنن تا بگن این اینترفیس هست 
+```
+package com.hassandn;
+
+public interface CanCalculateTax {
+    public double calculateTax();
+}
+```
+ما توی اینترفیس فقط این رو خواهیم داشت 
+البته استفاده از پابلیک ی جورایی اضافه هست چون برای استفاده از متد ها اونها باید حتما پابلیک باشن تا بتونیم به اونها دسترسی داشته باشیم
+خب ما برای استفاده کردن از اینترفیس ها نمیتونیم شئ درست کنیم چون پیاده سازی ای ازش نشده برای همین راه دیگه ای داریم برای انجام کارمون باید بریم کلاسی که کار رو انجام میده و بعدش اضافه کنیم که implements 
+## dependency injection
+یعنی اینکه استفاده کردن از آبجکت و ساختن آبجکت هردو چیزهای متفاوتی هستن  سه راه وجود داره برای اینکار 
+constructor injection
+setter injection
+method injection
+
+یعنی میایم تو اونی که باید استفاده بکنه ازش میگیم ی متغیری از جنس اینترفیس قراره که بیاد تو بیا اینو بگیر و از متدی که نیاز داریم استفاده کن 

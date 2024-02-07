@@ -1267,3 +1267,49 @@ setter injection
 method injection
 
 یعنی میایم تو اونی که باید استفاده بکنه ازش میگیم ی متغیری از جنس اینترفیس قراره که بیاد تو بیا اینو بگیر و از متدی که نیاز داریم استفاده کن 
+(پس توی انیجکشن ما میدونیم از نوع یک کلاسی قراره شئ ساخته بشه و بهمون داده بشه ولی برامون مهم نیست اسمش چیه)
+یک مثالی که خودم نوشتم
+```
+
+package com.test;
+
+public class Main {
+    public static void main(String[] args){
+        TaxCalculator2024 taxcalculator = new TaxCalculator2024(5_000_000);
+        TaxReporter taxreporter = new TaxReporter(taxcalculator);
+        taxreporter.show();
+    }
+}
+
+package com.test;
+
+public class TaxReporter {
+    private CanCalculateTax taxcalculator;
+
+    public TaxReporter(CanCalculateTax taxcalculator) {
+        this.taxcalculator = taxcalculator;
+    }
+
+    public void show(){
+        System.out.println(taxcalculator.calculateTax());
+    }
+}
+package com.test;
+
+public interface CanCalculateTax {
+    double calculateTax();
+}
+package com.test;
+
+public class TaxCalculator2024 implements CanCalculateTax {
+    private double calculatableIncme;
+
+    public TaxCalculator2024(double calculatableIncme) {
+        this.calculatableIncme = calculatableIncme;
+    }
+    @Override
+    public double calculateTax(){
+        return calculatableIncme * 0.3;
+    }
+}
+```

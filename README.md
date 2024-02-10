@@ -1269,6 +1269,7 @@ method injection
 یعنی میایم تو اونی که باید استفاده بکنه ازش میگیم ی متغیری از جنس اینترفیس قراره که بیاد تو بیا اینو بگیر و از متدی که نیاز داریم استفاده کن 
 (پس توی انیجکشن ما میدونیم از نوع یک کلاسی قراره شئ ساخته بشه و بهمون داده بشه ولی برامون مهم نیست اسمش چیه)
 یک مثالی که خودم نوشتم
+### Constructor Injection
 ```
 
 package com.test;
@@ -1313,3 +1314,67 @@ public class TaxCalculator2024 implements CanCalculateTax {
     }
 }
 ```
+### Setter Injection
+اگه میخوای که توی لایف تایم برنامه دپندنسی ها رو عوض کنی از ستتر اینجکشن استفاده میکنی 
+```
+package com.hassandn;
+
+public class TaxCalculator2025 implements CanCalculateTax{
+
+    @Override
+    public double calculateTax() {
+        return 0;
+    }
+}
+package com.hassandn;
+
+public class TaxReporter {
+    private CanCalculateTax taxCalculator;
+//    TaxCalculator2024 taxCalculator = new TaxCalculator2024(100_000);
+
+    public TaxReporter(CanCalculateTax taxCalculator) {
+
+        this.taxCalculator = taxCalculator;
+    }
+
+    public void show(){
+        System.out.println(taxCalculator.calculateTax());
+    }
+
+    public void setTaxCalculator(CanCalculateTax taxCalculator) {
+        this.taxCalculator = taxCalculator;
+    }
+
+}
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args) {
+        var result = new TaxCalculator2024(100_000);
+        var taxresult = new TaxReporter(result);
+        taxresult.show();
+        taxresult.setTaxCalculator(new TaxCalculator2025());
+        taxresult.show();
+    }
+
+}
+```
+توی این کد برای ریپورتر یک ستر ساختیم و بعد توی مین هرچی خواستیم رو بهش دادیم 
+### method injection
+توی این میایم و توی همون متد شو آبجکت رو صدا میزنیم بیشتر مردم از کانستراکتور استفاده میکنن
+```
+package com.hassandn;
+
+public class TaxReporter {
+    public void show(CanCalculateTax taxCalculator){
+        System.out.println(taxCalculator.calculateTax());
+    }
+}
+```
+برخلاف کلاس ها در جاوا اینترفیس ها میتونن چند تا پرنت داشته باشن 
+### Interface Segregation Principle
+Divide big interfaces into smaller ones
+یعنی اگه مثلا یک اینترفیسی داری که چند تا متد داره و متد ها به هم بی ربط هستن باید اونها رو جدا کنی
+چون وقتی مثلا یک کلاس از یک متد استفاده کرده باشه و کاری اصلا به بقیه اینترفیس ها نداشته باشه ولی دوباره باید کد به خاطر اون کامپایل بشه 
+برای مثال در کد زیر داریم 
+

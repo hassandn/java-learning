@@ -1378,3 +1378,192 @@ Divide big interfaces into smaller ones
 چون وقتی مثلا یک کلاس از یک متد استفاده کرده باشه و کاری اصلا به بقیه اینترفیس ها نداشته باشه ولی دوباره باید کد به خاطر اون کامپایل بشه 
 برای مثال در کد زیر داریم 
 
+### practice for myself
+```
+package com.hassandn;
+
+public class Main {
+    public static void main(String[] args){
+        var taxcalculator = new TaxCalculator2024(120_000);
+        var taxreporter = new TaxReporter(taxcalculator);
+        taxreporter.show();
+    }
+}
+package com.hassandn;
+
+public class TaxReporter {
+    private CanCalculateTax calculateTax;
+
+    public TaxReporter(CanCalculateTax calculateTax) {
+        this.calculateTax = calculateTax;
+    }
+
+    public void show(){
+        System.out.println(calculateTax.calculateTax());
+    }
+}
+package com.hassandn;
+
+public interface CanCalculateTax {
+    double calculateTax();
+}
+package com.hassandn;
+
+public class TaxCalculator2024 implements CanCalculateTax {
+    private double income;
+    public TaxCalculator2024(double income) {
+        this.income = income;
+    }
+
+    @Override
+    public double calculateTax(){
+       return income * 0.3;
+    }
+}
+
+```
+این روش برای constructor injection هست 
+یکی از خوبی های استفاده از اینتفرفیس استفاده از یونیت تست ها هستن 
+ما در چند سال اخیر مفاهیم جدیدی از اینترفیس ها داریم در جاوا که بهشون میگیم اینترفیس ها 
+# java features
+## java interfaces features
+### Fields
+تو میتونی توی اینترفیس ها از کانستراکتور ها استفاه کنی و یک مقداری رو به صورت فاینال بدی به اینترفیس این کار جالب نیست چون اون فیلد مخصوص به پیاده سازی هست و ربطی به اینترفیس نداره و میتونه توی خوده پیاده سازی باشه برای مثال توی همین مثالی که داریم 
+```
+package com.mytube;
+
+public interface CanNotification {
+    int Price = 1_000;
+    void sendNotification(User user);
+
+}
+package com.mytube;
+
+public class EmailService implements CanNotification {
+    private Video video;
+    private User user;
+    public EmailService(Video video) {
+        this.video = video;
+//        this.user = user;
+    }
+
+
+    @Override
+    public void sendNotification(User user) {
+
+        System.out.println("Notifying " + user.getEmail() + "..." + CanNotification.Price);
+        System.out.println("Done!\n");
+    }
+}
+Notifying john@domain.com...1000
+Done!
+```
+### Static methods
+ما میتونیم متد های استاتیک درست کنیم توی اینترفیس ها ولی اینجا یک مشکلی پیش میاد که اینترفیس الان پیاده سازی داره 
+interfaces are about whats not how's
+how's are for classes
+خب حالا سوال پیش ماید که ما ی چیز میخوایم که پیاده سازیش توی همه متد ها باید باشه اونجا ما از کلاس های ابسترک استفاده میکنیم 
+```
+package com.hassandn;
+
+public interface CanCalculateTax {
+    double calculateTax();
+
+    static double getTaxableIncome(double income, double expences){
+        return income - expences ;
+    }
+}
+
+```
+کدی که خواهیم داشت 
+```
+package com.hassandn;
+
+public interface CanCalculateTax {
+
+//    CanCalculateTax();
+
+    void calculateTax();
+
+
+}
+package com.hassandn;
+
+public class TaxCalculator2025 extends AbstractTaxCalculator {
+    public void calculateTax() {
+        getTaxableIncome(1_000_000,50_000);
+    }
+}
+package com.hassandn;
+
+public class AbstractTaxCalculator implements CanCalculateTax{
+
+    protected static double getTaxableIncome(double income, double expences){
+        return income - expences ;
+    }
+
+
+    @Override
+    public void calculateTax() {
+        return 0;
+    }
+}
+```
+### private methods
+ما میتونیم توی اینترفیس ها متد های پرایوت درست کنیم که دلیلش این هست که وقتی از استاتیک ها استفاده میکنی ی سری متد ها رو درست کنی تا کد کمتری توی استاتیک ها استفاده بشه 
+### interview questions
+
+فرق abstract و interface توی چی هست 
+#### interface : To Build loosely-coupled, extensible, testable applications
+#### Abstraction : To share code
+اگه ازت خواستن فرق  اینترفیس و ابسترکشن بکی داستان های پشتشون رو بگو و داستان
+hint: میتونیم برای اینکه ماکسین داشته باشیم در کلاس ها از اینترفیس ها استفاده کنیم چون میتونیم هر چند تا رو خواستیم implement کنیم 
+سودمندی های استفاده کردن از اینترفیس ها 
+1.متیونیم پیاده سازی ها رو تغییر بدیم 
+2. میتونی برنامت رو گشترش بدی با تاثیرات کم 
+3. میتونی کلاستو تست کنی توی ایزولیشن 
+هواست باشه که هر چیزی که درست میکنی دلیل خودش رو داشته باشه ساختن بی خودی اینها هم باعث اضافه تر شدن پولش میشه
+Dependency injection refers to passing or injecting dependencies of a
+class. 
+# advanced java
+## Exception
+وقتی به اروری برمیخوریم میگن که متد اکسپشن رو throw کرد 
+مثالی از یک اکسپشن
+```java
+package com.exeptions;
+
+public class Main {
+    public static void main(String[] args){
+        ExceptionDemo.show();
+    }
+}
+package com.exeptions;
+
+import java.util.Locale;
+
+public class ExceptionDemo {
+    public static void show(){
+        sayHello(null);
+    }
+    public static void sayHello(String name){
+        System.out.println(name.toUpperCase(Locale.ROOT));
+    }
+}
+```
+```
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String.toUpperCase(java.util.Locale)" because "name" is null
+	at com.exeptions.ExceptionDemo.sayHello(ExceptionDemo.java:10)
+	at com.exeptions.ExceptionDemo.show(ExceptionDemo.java:7)
+	at com.exeptions.Main.main(Main.java:5)
+```
+اینجا میاد و از جایی که مشکل هست شرواع میکنه میگرده اگه اکسپشن هندلر نداشته باشیم میاد و از جایی که صدا زده شده اون متد و اون رو فراخونی میکنه اگه اونجا هم اکسپشن هندلر ننوشته باشیم براش همینطور برمیگرده عقب
+توی کدمون یا باید برای هر ارور یک اکسپشن داشته باشیم یا بتونیم که خوب هندلشون کنیم 
+#### types of Exceptions
+1. checked
+2. unchecked
+3. error
+   اولی مربوط به این هست که مربوط به کامپایل هست و در زمان کامپایل اون رو چک میکنه برای مثال میگیم که یک فایل رو باز کنه توی مرحله کامپایل میاد اون رو چک میکنه و ارور میده
+   دومی رانتایم هست که وقتی در حال اجرا هست یک مشکلی بهش برمیخوریم و ارور میگیریم
+   ارور هم مثلا استک اور فلو ایندکس اوت اف رنج یا مموری اوت اف رنج و... هست
+   همه اکسپشن های ما از کلاس throwable میان زیر اون کلاس Error هست که مربوط به ارور هایی که هست که مربوط به برنامه ما نیست و کلاس Exception که مربوط به ارور های ما مربوط به زمان کامپایل هست
+   زیره Exception ما RuntimeException داریم 

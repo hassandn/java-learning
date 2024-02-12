@@ -1567,3 +1567,231 @@ Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String
    ارور هم مثلا استک اور فلو ایندکس اوت اف رنج یا مموری اوت اف رنج و... هست
    همه اکسپشن های ما از کلاس throwable میان زیر اون کلاس Error هست که مربوط به ارور هایی که هست که مربوط به برنامه ما نیست و کلاس Exception که مربوط به ارور های ما مربوط به زمان کامپایل هست
    زیره Exception ما RuntimeException داریم 
+متدوال ترین اکسپشن های ران تایم به صورت زیر هستن
+1. NullPointerException
+2. ArithmeticException
+3. IllegalArgumentException
+4. IndexOutOfBoundsException
+5. IllegalStateException
+
+   خب حالا فرض کن میخوایم کدی بنویسیم که کاربر فایلش اگه باز نشد اکسپشن بگیره پس داریم
+```
+package com.exeptions;
+
+import java.io.FileReader;
+
+public class Main {
+    var file = new FileReader("text.txt");
+    
+}
+```
+ما این کد رو که بنویسیم زیر میزنه که داداش اصلا وجود نداره و باید براش تست بنویسی
+میتونی از خوده ای دی ای استفاده کنی یا میتونی خودت دستی اضافه کنی روش خودکار به صورت زیر هست :
+```
+public class Main {
+
+    {
+        try {
+            var file = new FileReader("text.txt");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+}
+```
+اروری که ما اینجا میگیریم به این صورت هست :
+```
+Exception in thread "main" java.lang.RuntimeException: java.io.FileNotFoundException: text.txt (The system cannot find the file specified)
+	at com.exeptions.Main.main(Main.java:12)
+Caused by: java.io.FileNotFoundException: text.txt (The system cannot find the file specified)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:106)
+	at java.base/java.io.FileReader.<init>(FileReader.java:60)
+	at com.exeptions.Main.main(Main.java:10)
+
+Process finished with exit code 1
+```
+این ارور استاندارده خوده جاوا هست 
+برای دستیش میتونیم این رو بنویسیم 
+```
+try {
+            var file = new FileReader("text.txt");
+        }catch (FileNotFoundException ex){
+            System.out.println("file doesn't exist.");
+        }
+```
+```
+try {
+            var file = new FileReader("text.txt");
+        }catch (FileNotFoundException ex){
+            System.out.println(ex.getMessage());
+        }
+```
+ما اگه این خط رو بهش اضافه کنیم باز به این ارور میخوریم که باید براش اکسپشن تعریف کنیم 
+```
+try {
+            var file = new FileReader("text.txt");
+            var reader = file.read();
+            
+        }catch (FileNotFoundException ex){
+            System.out.println(ex.getMessage());
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+```
+کد به این صورت نوشته میشه حالا اگه ترتیب این اکسپشن ها رو عوض کنیم میبینیم که مینه که 
+```
+try {
+            var file = new FileReader("text.txt");
+            var reader = file.read();
+        }
+        catch (IOException exa) {
+            throw new RuntimeException(exa);
+        }
+        
+        catch (FileNotFoundException ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+```
+```
+Exception 'java.io.FileNotFoundException' has already been caught
+```
+این میگه همین الان ما این اکسپشن رو گرفتیم 
+پس ترتیب گذاشتن ارور ها مهم هست توی جاوا چون طبق داکیومنت خوده جاوا داریم :
+```
+java.io.IOException
+	java.io.FileNotFoundException
+```
+این نمونه ای از پولی مورفیزم هست 
+و این به این معنی هست که میتونیم کچ آخری رو برداریم 
+برای اینکه دوتا اکسپشن رو بگیم یک پاسخ رو بگن داریم :
+```
+    try {
+            var file = new FileReader("text.txt");
+            var reader = file.read();
+            new SimpleDateFormat().parse("");
+        }
+        catch (IOException | ParseException exa) {
+            throw new RuntimeException(exa);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+```
+### finally block
+اینجا ی سری مشکل هست مثلا وقتی که فایل ریدر رو ازش ابجکت میسازیم os میاد و یک قسمت رو به ما میده و این باعث میشه که بقیه نرم افزار ها نتونن به اون بخش دسترسی داشته باشن برای همین باید اون رو ببندیم برای همین از finally استفاده میکنیم 
+
+```java
+FileReader file = null;
+        try {
+            file = new FileReader("text.txt");
+            var reader = file.read();
+            new SimpleDateFormat().parse("");
+        } catch (IOException | ParseException exa) {
+            throw new RuntimeException(exa);
+        } finally {
+            if (file != null) {
+                try {
+                    file.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+```
+کد به این صورت خواهد شد این کد ی خورده مشکل داره برای همین توی در زیر نسخه بهتر شدش رو داریم 
+
+### try with resources
+وقتی از این استفاده کنیم خودش میاد و به صورت explicitly (ضمنی) اون ها رو کلوز میکنه 
+The try-with-resources statement is a try statement that declares one or more resources. A resource is an object that must be closed after the program is finished with it.
+```
+try (
+                var file = new FileReader("text.txt")
+        ) {
+            var reader = file.read();
+            new SimpleDateFormat().parse("");
+        } catch (IOException | ParseException exa) {
+            throw new RuntimeException(exa);
+        } 
+```
+توی این کد دیگه خوده جاوا میاد و این ها رو وقتی کار تموم شد تمومشون میکنن
+### throwing exceptions
+
+```java
+public void deposit(float value){
+        if(value <= 0){
+            throw new IllegalArgumentException("meow");
+        }
+    }
+```
+این unchecked یا runtime exception هست 
+به این کار میگن  defensive programing
+#### defensive programing
+یعنی وقتی به مشکلی خوردیم ما یک اکسپشن پرتاب میکنیم و از ادامه برنامه جلوگیری میکنیم 
+اینو معمولا وقتی استفاده کن که ورودی از کاربر گرفتی یا میخوای که از سیستم یک چیزو چک کنی
+```
+public void deposit(float value) throws IOException{
+            if(value <= 0){
+                throw new IOException();
+            }
+        }
+var acc = new Account();
+        try {
+            acc.deposit(3444);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+```
+اینجا میگیم که این متد شاید یک Ioexception بده توی تابع مین هم یک ترای مزنیم 
+Rethrowing Exceptions
+
+#### custom Exception
+برای اینکه اکسپشن های کاستوم درست کنیم باید ببینیم که چه نوع اکسپشنی میخوایم بدیم 
+1. checked Exception -> Exceotion class
+2. unchecked Exception -> RuntimeException
+برای مثال فک کن میخوایم یک اکسپشن درست کنیم که کاربر اگه از مقدار پولش بیشتر درخواست برداشت داد اکسپشن بخوره اون وقت خواهیم داشت:
+```
+package com.exeptions;
+
+public class InsufficientFundsException extends Exception{
+
+    public InsufficientFundsException(){
+        System.out.println("you dont have enough money!");
+    }
+
+    public InsufficientFundsException(String message){
+        super(message);
+    }
+
+}
+public void withDraw(float value) throws InsufficientFundsException{
+            if (value > balance)
+                throw new InsufficientFundsException();
+        }
+}
+package com.exeptions;
+
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) {
+        var acc = new Account();
+        try {
+            acc.withDraw(15);
+        } catch (InsufficientFundsException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+
+    }
+}
+
+```
+تو خوده تابع میگیم که ارور میده و وقتی که خواستیم صداش بزنیم از ترای کچ استفاده میکنیم 
+chaining exceptions
+میتونیم طوری بزاریم اکسپشن ها رو که بگیم این خطا به خاطر فلان خطا رخ داد

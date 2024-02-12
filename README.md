@@ -1755,7 +1755,7 @@ Rethrowing Exceptions
 1. checked Exception -> Exceotion class
 2. unchecked Exception -> RuntimeException
 برای مثال فک کن میخوایم یک اکسپشن درست کنیم که کاربر اگه از مقدار پولش بیشتر درخواست برداشت داد اکسپشن بخوره اون وقت خواهیم داشت:
-```
+```java
 package com.exeptions;
 
 public class InsufficientFundsException extends Exception{
@@ -1795,3 +1795,79 @@ public class Main {
 تو خوده تابع میگیم که ارور میده و وقتی که خواستیم صداش بزنیم از ترای کچ استفاده میکنیم 
 chaining exceptions
 میتونیم طوری بزاریم اکسپشن ها رو که بگیم این خطا به خاطر فلان خطا رخ داد
+```java
+package com.exeptions;
+
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) {
+        var acc = new Account();
+        try {
+            acc.withDraw(-1500);
+        }catch (AccountException e){
+            e.getStackTrace();
+        }
+
+    }
+}
+package com.exeptions;
+
+public class AccountException extends Exception {
+    public AccountException(Exception cause){
+        super(cause);
+    }
+}
+package com.exeptions;
+
+import java.io.IOException;
+
+public class Account {
+        private float balance;
+        public void deposit(float value) throws IOException{
+            if(value <= 0){
+                throw new IOException();
+            }
+        }
+
+        public void withDraw(float value) throws AccountException{
+            if (value < balance)
+                throw new AccountException(new InsufficientFundsException());
+        }
+}
+
+```
+با این کدا تریس بک نشون میده که فلان ارور رو برخورد کردیم به خاطر فلان چیز
+## generics	
+```java
+package com.exceptions;
+
+public class IntList {
+    int[] list = new int[10];
+    private int index;
+
+    public void add(int value){
+        list[index++] = value;
+    }
+
+    public void get(int index){
+        System.out.println(list[index]);
+    }
+
+}
+package com.exceptions;
+
+public class Main {
+    public static void main(String[] args){
+        var intlst = new IntList();
+        intlst.add(5);
+        intlst.add(3);
+        intlst.get(1);
+        intlst.get(0);
+    }
+}
+```
+اول طرح مشکل میکنیم 
+فزض کن که یک فایلی درست کردی که توی این لیست ما int نگه میداریم و پیاده سازی برای اضافه کردن و پاک کردن هم بهش اضافه میکنیم 
+حالا فک کن یک لیست برای یوزر ها میخوایم با همون پیاده سازی ها دوباه ی لیست برای استرینگ ها و همینطور پیش میره به جلو اینجا برای حل این مشکل ما راهکاری داریم 
+اون وقت میتونیم به جای اینکه بنویسیم int یا user مینویسیم object اینطوری ما لیستی از آبجکت ها خواهیم داشت 

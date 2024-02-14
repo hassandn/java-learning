@@ -1871,3 +1871,156 @@ public class Main {
 فزض کن که یک فایلی درست کردی که توی این لیست ما int نگه میداریم و پیاده سازی برای اضافه کردن و پاک کردن هم بهش اضافه میکنیم 
 حالا فک کن یک لیست برای یوزر ها میخوایم با همون پیاده سازی ها دوباه ی لیست برای استرینگ ها و همینطور پیش میره به جلو اینجا برای حل این مشکل ما راهکاری داریم 
 اون وقت میتونیم به جای اینکه بنویسیم int یا user مینویسیم object اینطوری ما لیستی از آبجکت ها خواهیم داشت 
+```java
+package com.exceptions;
+public class IntList1 {
+    Object[] mylist = new Object[10];
+    private int index;
+
+    public void add(Object value){
+        mylist[index++] = value;
+    }
+
+    public void get(int index){
+        System.out.println(mylist[index]);
+    }
+
+}
+package com.exceptions;
+
+public class Main {
+    public static void main(String[] args){
+//        var intlst = new IntList();
+//        intlst.add(5);
+//        intlst.add(3);
+//        intlst.get(1);
+//        intlst.get(0);
+//        System.out.println("start");
+        var objlist = new IntList1();
+        objlist.add(2);
+        objlist.add("Hello there");
+        objlist.add(true);
+        objlist.get(0);
+        objlist.get(1);
+        objlist.get(2);
+
+    }
+}
+```
+```
+start
+2
+Hello there
+true
+```
+اگه هم که با آبحکت اون رو درست کنیم به صورت بالا هست 
+مثلا یک مشکلی که ما بهش میخوریم اینکه میگیم گت کن آیتم اولی رو توی یک متغیر که اینت هست ولی مشکل این هست دقیقا که ما نمیدونیم اون چیه و باید آبجکت باشه برای اینکار باید اون رو کست کنیم که باز به مشکل میخوریم اگه تایپی که انتخاب کرده بودیم اشتباه بود 
+```java
+	int num = (int)objlist.get(0);//it's kinda ugly code
+	int num = (int)objlist.get(1);//it's get casting error
+```
+ برای گرفتن پارامتر در کلاس ها در جاوا ما از این روش زیر استفاده میکنیم 
+```java
+package com.exceptions;
+
+public class Generics<T> {
+}
+```
+داخل <> ما عددمون رو میزاریم به همین راحتی 
+```java
+package com.exceptions;
+
+public class Generics<T> {
+    private T[] mylist = (T[])new Object[10];
+    private int count;
+
+    public void add(T value){
+        mylist[count++] = value;
+    }
+
+    public void get(int count){
+        System.out.println(mylist[count]);
+    }
+}
+```
+اینجا میایم و ی لیست درست میکنیم که جنس تی  توش ذخیره میشه و ما تا زمان اجرای برنامه نمیدونیم T چی میتونه باشه 
+معنی خط دوم اینکه ما یک متغیر پرایوت داریم به اسم mylist  ما چون موقع اجرا معلوم میشه جنسه تی چی هست و به خطا میخوریم برای همین به جای object[10] میزاریم که به ارور نخوریم و هرچی شد تایپش زیره Object باشه در نهایت اون رو کس کید میکنیم توی لیستی از تی 
+بقیشم که مشخصه رفیث :)
+ما رفرنس تایپ داریم و پریمیتیو تایپ رفرنس تایپ ها چون زیره Object هستن میتونیم اونها رو بزاریم برای تایپ و بعد مقابلشون بزاریم که جنسی از Object هست برای همین ما از wrapper class ها استفاده میکنیم که یک اینتسنس درست میکنن
+برای مثال داریم 
+```
+float -> Float
+int -> Integer
+boolean -> Boolean
+```
+wrapper به کلاس هایی گقته میشه که داده های اولیه رو میگیرن و تبدیل میکنن به شئ داده 
+به تبدیل از پریمیتیو تایپ به رفرنس تایپ باکسینگ و از تبدیل شدن رفنرس به پریمیتیو میگن آنباکسینگ
+```java
+package com.exceptions;
+
+public class Main {
+    public static void main(String[] args){
+    var asap = new Generics<Integer>();
+    asap.add(3); // boxing
+   int number = asap.get(0); // unboxing    
+
+    }
+}
+```
+### constraints
+اگه خواستیم محدود کنیم که نوع خاصی از ابجکت داشته میتونیم از کانترینتس استفاده کنیم که اونها رو محدود کنه برای مثال اگه خواستیم حتما عدد داشته باشه خواهیم داشت:
+```
+package com.exceptions;
+
+public class Generics<T extends Number>{
+    private T[] mylist = (T[])new Object[10];
+    private int count;
+
+    public void add(T value){
+        mylist[count++] = value;
+    }
+
+    public void get(int count){
+        System.out.println(mylist[count]);
+    }
+}
+```
+در کد بالا فقط میشه که عدد باشن float int short long  اگه خارج از اینا باشن نمیشه ما همچینین Comparable داریم که میگه آبجکت هایی که قابل مقایسه هستن باشن برای مثال اگه خواستیم یک آبجکتی درست کنیم که کامپریبل باشه از زیر استفاده میکنیم 
+```
+package com.exceptions;
+
+public class User implements Comparable {
+}
+package com.exceptions;
+
+public class Generics<T extends Comparable>{
+    private T[] mylist = (T[])new Object[10];
+    private int count;
+
+    public void add(T value){
+        mylist[count++] = value;
+    }
+
+    public void get(int count){
+        System.out.println(mylist[count]);
+    }
+}
+```
+اون وقت میتونیم از نوع داده یوزر استفاده کنیم 
+همچنین میتونیم دو تا محدودیت هم بزاریم 
+```
+package com.exceptions;
+
+public class Generics<T extends Comparable & Cloneabe>{
+    private T[] mylist = (T[])new Object[10];
+    private int count;
+
+    public void add(T value){
+        mylist[count++] = value;
+    }
+
+    public void get(int count){
+        System.out.println(mylist[count]);
+    }
+}
+```

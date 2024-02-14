@@ -2024,3 +2024,70 @@ public class Generics<T extends Comparable & Cloneabe>{
     }
 }
 ```
+#### type erasure 
+این میگه که کامپایلر وقت ی جنریک میسازیم فایل بایت کدش تبدیل میشه به کدی که تایپ آبجکت ها برابر هست با Object اگه اون ها رو constrain کنیم توی بایت کد توش میاد و از اون محدودیت استفاده میکنه برای مثال داریم:
+```bytecode
+public class com/exceptions/Generics {
+
+  // compiled from: Generics.java
+
+  // access flags 0x2
+  // signature [TT;
+  // declaration: mylist extends T[]
+  private [Ljava/lang/Object; mylist
+
+  // access flags 0x2
+  private I count
+
+  // access flags 0x1
+  public <init>()V
+   L0
+    LINENUMBER 3 L0
+    ALOAD 0
+    INVOKESPECIAL java/lang/Object.<init> ()V
+
+```
+توی این کد بدون محدودیته اگه محدودیت مثلا نامبر بزاریم به جای آبجکت میزاره نامبر 
+حالا بحث type erasure اینجاست که وقتی دو تا محدودیت بزاریم کامپایلر میاد و فقط سمت چپی رو پیاده سازی میکنه یعنی اینکه اگه محدودیت ها به ترتیب از سمت چپ comparable & cloneable باشه کامپیرابل توی کد استفاده میشه 
+```
+PUTFIELD com/exceptions/Generics.mylist : [Ljava/lang/Comparable;
+    RETURN
+   L2
+```
+#### comparable interface
+برای اینکه دو شئ رو با هم مقایسه کنیم داریم:
+```
+package com.exceptions;
+
+public class User implements Comparable<User> {
+    private int points;
+
+    public User(int points){
+        this.points = points;
+    }
+
+    @Override
+    public int compareTo(User other) {
+        return points - other.points;
+//        return 0;
+
+    }
+}
+package com.exceptions;
+
+public class Main {
+    public static void main(String[] args){
+
+        var user1 = new User(10);
+        var user2 = new User(200);
+        if  (user2.compareTo(user1)<0)
+            System.out.println("It's lower");
+        else if (user2.compareTo(user1) == 0)
+            System.out.println("it's equal");
+        else
+            System.out.println("it's bigger");
+    }
+}
+
+```
+اگه مثبت برگردونه یعنی بزرگتر اگه منفی برگردونه یعنی کوچک تر و اگه صفر برگردونه یعنی مساوی بودن

@@ -2056,7 +2056,7 @@ PUTFIELD com/exceptions/Generics.mylist : [Ljava/lang/Comparable;
 ```
 #### comparable interface
 برای اینکه دو شئ رو با هم مقایسه کنیم داریم:
-```
+```java
 package com.exceptions;
 
 public class User implements Comparable<User> {
@@ -2091,3 +2091,43 @@ public class Main {
 
 ```
 اگه مثبت برگردونه یعنی بزرگتر اگه منفی برگردونه یعنی کوچک تر و اگه صفر برگردونه یعنی مساوی بودن
+#### generic method
+متد های جنریک رو میشه به این صورت نوشت برای مثال داریم 
+```java
+package com.exceptions;
+
+public class Utils {
+    public static <T extends Comparable<T>> T max(T first,T second){
+       return (first.compareTo(second) < 0) ? first : second;
+    }
+}
+    @Override
+    public String toString(){
+        return "Points :=> " + points;
+    }
+```
+با این کد حتی یوزر ها هم متیونیم مقایسه کنیم 
+اینجا چون از کامپیربل استفاده کردیم و توی یوزر اون صدا زده میشه و نتیجه رو نشون میده 
+#### multiple types parameters
+میتونیم هم متد درست کنیم و هم کلاس برای همین 
+
+```java
+public static <K ,V> void print(K key, V value){
+        System.out.println("Key : " + key + " has value:=> " + value);
+
+    }
+```
+```java
+package com.exceptions;
+
+public class KeyValuePair<K, V> {
+    private K key;
+    private V value;
+
+    public KeyValuePair(K key,V value){
+        this.key = key;
+        this.value = value;
+    }
+}
+```
+

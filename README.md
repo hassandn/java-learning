@@ -2130,4 +2130,74 @@ public class KeyValuePair<K, V> {
     }
 }
 ```
+#### 11- Generic Classes and Inheritance
+اینجا رو خودم دقیق متوجه نشدم ولی خب...
+یک کلاس درست میکنیم به نام Instructor که از کلاس یوزر ارث بری میکنه 
+```java
+package com.exceptions;
 
+public class Instructor extends User {
+    public Instructor(int points){
+        super(points);
+
+    }
+}
+
+```
+بعد از اون توی کلاس یوتلیز یک تابع درست میکنیم به نام پرینت یوزرز که پارامترش از جنس یوزر هست به اسم یوزر
+```java
+public static void printUser(User user){
+        System.out.println(user);
+    }
+```
+بعد از اون میتونیم توی تابع مین به جای یوزر اینستراکتور رو بدیم به متدمون و مشکلی ایجاد نمیشه :
+```java
+package com.exceptions;
+
+
+public class Main {
+    public static void main(String[] args){
+        var user = new Instructor(39);
+        Utils.printUser(user);
+    }
+}
+```
+حالا فرض کن که یک جنریک لیست از یوزر میخوایم درست کنیم و اون رو بگیریم 
+```java
+public static void printUser(Generics<User> users)
+{
+    ;
+}
+```
+```java
+	var users = new Generics<User>();
+        Utils.printUser(users);
+```
+اینجا ما به مشکلی برخورد نمیکنیم به تنها مشکلی که برخورد میکنیم اونجا هست که Instroctur رو بهش میدیم اونجاست که ما به مشکل برخورد میکنیم 
+```java
+        var users = new Generics<Instructor>();
+        Utils.printUser(users);
+```
+الان مشکل این هست که ما زدیم تایپش یوزر باشه توی printUser ولی ما Inatroctur  دادیم که این مشکل ایجاد میکنه چون جنریک لیسته Instoctur زیرگروه جنریک لیسته User نیست برای همین خطا میده و میگه که داداچ گفتی یوزر میدی یک راه برای اینکه این خطا پیش نیاد این هست که بریم و دونه دونه از لیسته Instuctor بگیریم و به User بدیم 
+راه دیگه برای این کار استفاده از Wild carts هست 
+#### Wild carts
+وایلد کارتز یعنی اینکه بگیم تاپیش معولم نیست 
+```java
+	//	Cap#1 extends User
+    public static void printUser(Generics<?> users)
+    {
+                Object x = users.get(0);
+    }
+```
+وقتی که این ها رو درست میکنیم یا باید از کلاس کپچر باشه که ما دسترسی نداریم بهش یا باید بیس تایپش باشه که Object هست 
+انیجا میتونیم دیگه از هر نوع تایپی استفاده کنیم ولی مشکل اینکه حتی میتونیم از تایپ های دیگه ای مثل Int & String استفاده کنیم برای ایجاد این محدودیت از کلاس User ارث بری میکنیم :
+```java
+	// Cap#1 extends User
+    public static void printUser(Generics<? extends User> users)
+    {
+        ;
+    }
+```
+ما نمیتونیم آبجکت رو توی instructor سیو کنیم چون cap#1 و instuctor هر دوتاشون زیر شاخه user هستن و وقتی میخوایم سیو کنیم از cap استفاده میشه برای همین فقط میتونیم از پرنت های اون استفاده کنیم 
+
+اینجا میتونیم اینجا از لیست بخونیم ولی نمیتونیم اد کنیم اگه بخوایم اد کنیم باید از کلمه super به جای extends  استفاده کنیم 

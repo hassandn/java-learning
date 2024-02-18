@@ -2209,7 +2209,62 @@ public static void printUser(Generics<User> users)
 اگه خواستیم ازش بخونیم از extends استفاده میکنیم 
 اگه خواستیم توش اضافه کنیم از super استفاده میکنیم  
 ## Collections
+The Collection in Java is a framework that provides an architecture to store and manipulate the group of objects.
+### iterable
+فرض کن میخوای که از جنریکمون همه دیتا ها رو بخونیم اینجا یک راهش این هست که لیست رو که داخل حنریک لیست هست رو پابکیک کنیم که این داره اصل ابسترکشن رو بهم میزنه 
+```java
+package com.exceptions;
+
+public class Generics<T>{
+    public T[] mylist = (T[])new Object[10];
+    private int count;
+
+    public void add(T value){
+        mylist[count++] = value;
+    }
+
+    public T get(int count){
+        return mylist[count];
+    }
+}
+package com.exceptions;
+
+
+public class Main {
+    public static void main(String[] args){
+
+        var list = new Generics<String>();
+        list.mylist[0] = "a";
+        for (String item : list.mylist){
+            System.out.println(item);
+        }
+
+    }
+}
+```
+مشکلی که اینجا به وحود میاد اینکه اگه خواستی لیست رو عوض کنیم و به جاش ArrayList بزاریم اون وقت مشکل برای ما پیش میاد چون از اون نمیشه ایندکس گرفت و حتی طولش رو گرفت
+```java
+ package com.exceptions;
+
+import java.util.ArrayList;
+
+public class Generics<T>{
+    public ArrayList<T> mylist = new ArrayList<>();
+    private int count;
+
+    public void add(T value){
+        mylist[count++] = value;
+    }
+
+    public T get(int count){
+        return mylist[count];
+    }
+}
+
+```
+اینجا دیگه کد های بالا کار نمیکنن 
+خب حالا iterable interface برای کمک به ما میاد 
+برای اینکه از ایترابل استفاده کنیم باید از اینترفیسش استفاده کنیم 
 ```java
 
 ```
-

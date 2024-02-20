@@ -2266,5 +2266,62 @@ public class Generics<T>{
 خب حالا iterable interface برای کمک به ما میاد 
 برای اینکه از ایترابل استفاده کنیم باید از اینترفیسش استفاده کنیم 
 ```java
+package com.emsal;
+
+
+public class Main {
+    public static void main(String[] args){
+        var cars = new GenericList<String>();
+        cars.add("no one");
+        cars.add("stays the same");
+        cars.add("no one");
+        cars.add("stays the same");
+        cars.add("no one");
+        cars.add("stays the same");
+        cars.add("no one");
+        cars.add("stays the same");
+        cars.add("no one");
+        cars.add("stays the same");
+//        var iterator = cars.iterator();
+        for (String car : cars){
+            System.out.println(car);
+        }
+
+}}
 
 ```
+
+```java
+package com.emsal;
+
+
+public class Main {
+    public static void main(String[] args){
+        var cars = new GenericList<String>();
+        cars.add("no one");
+        cars.add("stays the same");
+        cars.add("no one");
+        cars.add("stays the same");
+        cars.add("no one");
+        cars.add("stays the same");
+        cars.add("no one");
+        cars.add("stays the same");
+        cars.add("no one");
+        cars.add("stays the same");
+        var iterator = cars.iterator();
+
+        while (iterator.hasNext()){
+            String current = iterator.next();
+            System.out.println(current);
+        }
+    }
+
+}
+```
+توی این اگه به اندازه خوده لیست ما اعضا نداشته باشیم null برمیگردونه 
+پس حلقه for هم از ایتریبل استفاده میکنه 
+اگه implements Iterable رو حذف کنیم خواهیم دید که توی مین مینویسه 
+for each not applicable to type GenericList
+پس اگه خواستیم تایپ لیست رو عوض کنیم بعدا خواهیم دید که مشکلی برخورد نمیکنه چون ما اینترفیس رو صدا زدیم 
+در ادامه متد iterator رو پیاده سازی کنیم چون الان داره null برمیگردونه 
+این متد Iterable رو برمیگردونه که از کتابخونه java.util هست پس حالا باید کلاس جدیدی درست کنیم که iterator interface رو برمیگردونه 

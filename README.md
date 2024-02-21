@@ -2325,3 +2325,105 @@ for each not applicable to type GenericList
 پس اگه خواستیم تایپ لیست رو عوض کنیم بعدا خواهیم دید که مشکلی برخورد نمیکنه چون ما اینترفیس رو صدا زدیم 
 در ادامه متد iterator رو پیاده سازی کنیم چون الان داره null برمیگردونه 
 این متد Iterable رو برمیگردونه که از کتابخونه java.util هست پس حالا باید کلاس جدیدی درست کنیم که iterator interface رو برمیگردونه 
+
+
+```java
+package com.emsal;
+
+import java.util.Arrays;
+import java.util.Iterator;
+
+public class GenericList<T> implements Iterable<T> {
+    private T[] item = (T[])new Object[10];
+    private int count;
+    public void add(T value){
+        item[count++] = value;
+    }
+
+    public T get(int index){
+        return item[index];
+    }
+    @Override
+    public Iterator<T> iterator() {
+        return new ListIterator(this);
+    }
+
+    private class ListIterator implements Iterator<T> {
+        private GenericList<T> list;
+        private int index;
+        public ListIterator(GenericList<T> list){
+            this.list = list;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return (index < list.count);
+        }
+
+        @Override
+        public T next() {
+            return list.item[index++];
+        }
+    }ها کار داریم 
+}
+```
+لازم نیست که تک تکه اینا رو حفظ کنی مهم اینکه کلیاتشو بفهمی و بدونی که چه کارایی میشه باهاشون کرد
+#### collections
+کلی پیاده سازی داره که اکثر مواقع ما با ArrayList 
+```java
+package com.emsal;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class CollectionDemo {
+    public static void show(){
+        Collection<String> collection = new ArrayList<>();
+        collection.add("A");
+        collection.add("B");
+        collection.add("C");
+        System.out.println(collection);
+    }
+}
+```
+ما توی این کد میتونیم آیتم ها رو با حلقه ببینیم و حتی میتونیم که تمام آیتم ها رو یک جا وارد کنیم به جای اینکه دونه دونه اونها رو وارد کنیم 
+```java
+package com.emsal;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
+public class CollectionDemo {
+    public static void show(){
+        Collection<String> collection = new ArrayList<>();
+        Collections.addAll(collection, "A","B","c");
+        System.out.println(collection);
+    }
+}
+```
+ما میتونیم همچنین سایزشونم برگردونیم 
+```java
+	System.out.println(collection.size());
+```
+میتونیم از کالکشن چیزی رو پاک کنیم 
+```java
+	collection.remove("A");
+	collection.clear();
+	collection.isEmpty();
+```
+حتی میتونیم چک کنیم که آیا مقداری رو داره یا نه
+```java
+	System.our.println(collection.contains("A"));
+```
+اگه خواستی که کالکشن رو توی آرایه معمولی ذخیره کنی 
+```java
+	Object[] objectarray =  collection.toArray();
+```
+اون وقت وقتی این رو میخوای صدا بزنی اینطور collection. گزینه هایی رو میاره که برای آبجکت ها وجود دارن اگه خواستی که آرایه مثلا به تایپ استرینگ باشه میتوین اینطوری ادامه بدی:
+```java
+	String[] stringArray = collection.toArray();
+```
+برای مقایسه هم که میدونی اگه بخوای دوتا آبجکت رو همینطوری با == مقایسه کنی فالس میده ولی با استفاده از collection.equals() اوکی میشه مشکلمون 
+#### list interfaces
+توی این مورد ما ایندکس داریم 

@@ -2426,4 +2426,98 @@ public class CollectionDemo {
 ```
 برای مقایسه هم که میدونی اگه بخوای دوتا آبجکت رو همینطوری با == مقایسه کنی فالس میده ولی با استفاده از collection.equals() اوکی میشه مشکلمون 
 #### list interfaces
-توی این مورد ما ایندکس داریم 
+توی این مورد ما ایندکس داریم و میتونیم با ایندکس ها به ایتم ها دسترسی داشته باشیم و به اونها رو اضافه یا عوض ویا تغییر بدیم 
+
+ما یک متد اورراید شده داریم به نام ادد که میتونیم بهشون ایندکس بدیم و ولیو هم بهشون بدیم 
+```java
+        List<String> lst = new ArrayList();
+        lst.add("hey");
+        lst.add("there you");
+        lst.add(0,"I seem depresed");
+        System.out.println(lst);
+```
+```java
+        List<String> lst = new ArrayList();
+        Collections.addAll(lst,"A", "B", "C");
+        System.out.println(lst);
+```
+```java
+package com.emsal;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class CollectionDemo{
+    public static void show(){
+        List<String> lst = new ArrayList();
+        Collections.addAll(lst,"A", "B", "C");
+        System.out.println(lst.get(0));
+    }
+}
+```
+```java
+        List<String> lst = new ArrayList();
+        Collections.addAll(lst,"A", "B", "C");
+        System.out.println(lst.get(0));
+
+```
+```java
+	Collections.addAll(lst,"A", "B", "C", "A");
+        System.out.println(lst.indexOf("A"));
+	0
+```
+```java
+	Collections.addAll(lst,"A", "B", "C", "A");
+	System.out.println(lst.lastIndexOf);
+	3
+```
+```java
+	System.out.println(lst.subList(0,2));
+```
+
+### compairable interface
+توی این ویدیو یاد خواهیم گرفت که چجوری داده ها رو سورت کنیم توی و مقایسه کنیم اونها رو با هم دیگه 
+خیلی از الگوریتم های sort از compairable ارث بری میکنن
+```java
+package com.emsal;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        List<Customer> customers = new ArrayList<>();
+        customers.add(new Customer("C"));
+        customers.add(new Customer("A"));
+        customers.add(new Customer("B"));
+        Collections.sort(customers);
+        System.out.println(customers);
+
+    }
+}
+```
+اینجا اگه بخوایم مقایسه کنیم میگه که باید از comparable ارث بری کنه برای همین باید این قسمتش رو اوکی کنیم برای همین داریم:
+```java
+package com.emsal;
+
+public class Customer implements Comparable<Customer>{
+    private String name;
+
+    public Customer(String name){
+        this.name = name;
+    }
+
+    @Override
+    public int compareTo(Customer other) {
+        return (name.compareTo(other.name));
+    }
+
+    @Override
+    public String toString(){
+        return name;
+    }
+}
+```
+توی کامپریبل اگه یادت باشه جواب ها باید به این صورت باشه که اگه منفی باشه یعنی کوچک تر هست اگه صفر باشه یعنی مساوی و اگه بزرگتر باشه عدد مثبت برمیگردونه 

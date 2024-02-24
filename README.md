@@ -2524,3 +2524,172 @@ public class Customer implements Comparable<Customer>{
 #### comparator interface
 کد قبلی مشکلی که داره این هست که فلکس ابل نیست اگه خواستیم چیزه بزاریم برای سورت کردن به مشکل بر میخوریم
 مثلا فرض کن که یوزر ها ایمیل هم دارن اگه بخوایم که اونها رو بر این اساس سورت کنیم 
+ی کامپراتور درست میکنیم و بعد شیوه مقایسه رو میزاریم بعدش وقتی که پیاده سازی انجام شد خواهیم دید که متد sort اورلود هست و چند تا پیاده سازی براش هست از اونی استفاده میکنیم که بتونیم ماله خودمون رو اضافه کنیم 
+```java
+package com.emsal;
+
+import java.util.Comparator;
+
+public class EmailComprator implements Comparator<Customer> {
+
+
+    @Override
+    public int compare(Customer o1, Customer o2) {
+        return o1.getEmail().compareTo(o2.getEmail());
+    }
+}
+```
+```java
+package com.emsal;
+
+public class Customer implements Comparable<Customer>{
+    private String name;
+    private String email;
+
+    public Customer(String name, String email){
+        this.name = name;
+        this.email = email;
+    }
+
+    @Override
+    public int compareTo(Customer other) {
+        return (name.compareTo(other.name));
+    }
+
+    @Override
+    public String toString(){
+        return name;
+    }
+
+    public String getEmail(){
+        return email;
+    }
+}
+```
+```java
+package com.emsal;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        List<Customer> customers = new ArrayList<>();
+        customers.add(new Customer("C","e5"));
+        customers.add(new Customer("Abra", "e4"));
+        customers.add(new Customer("B", "e3"));
+        customers.add(new Customer("Ali", "e2"));
+        Collections.sort(customers);
+
+        System.out.println(customers);
+        Collections.sort(customers,new EmailComprator());
+        System.out.println(customers);
+    }
+}
+```
+توی سورت دومی گزینه ای هست که میتونیم اونطور که میخوایم سورت کنیم 
+#### Queue interface
+وقتی از کیو ها استفاده میکنیم که میخوایم کار ها به صورتی انجام بگیرن که وارد شدن بیشتره صف هایی که ممکنه توی کله کارت ازشون استفاده کنی ArrayDeque و proiorityQueue هست 
+deque مختصر برای double ended queue
+یعنی اینکه میتونیم اخر و اول صف رو چیزی بزاریم و یا چیزی رو حذف کنیم 
+پراروریتی برای هر عضو یک اولویت دارن 
+```java
+package com.emsal;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+public class DeQueueDemo {
+    public static void show(){
+        Deque<String> queue = new ArrayDeque<>();
+        queue.add("till");
+        queue.add("I collapse");
+        queue.offer("i");
+        
+    }
+}
+```
+افر در اینجا به این معنا هست که اگه مثلا محدودیت داشتیم و صف پر بود ما افر میدیم ولی نمیاد توی صف
+```java
+	queue.peek();
+	queue.element();
+```
+پیک اولی رو نشون میده ولی اگه که صف خالی بود اون وقت میاد و نال نشون میده ولی المنت ارور میده 
+```java
+	queue.poll();
+	queue.remove();
+```
+این برای پول و ریمو هم همینطوره پول اگه لیست خالی بود نال میده ولی ریمو ارور میده 
+#### set interface
+نان اوردری هست و نان دوپلیکید 
+```java
+        Set<String> maset = new HashSet<>();
+        maset.add("a");
+        maset.add("B");
+        maset.add("e");
+        System.out.println(maset);
+```
+ما میتونیم همچنین کالکشن ها رو برای داپلیکید رو بگیریم ازش تبدیل کنیم به ست
+```java
+        Collection<String> collection = new ArrayList<>();
+        Collections.addAll(collection, "A" , "B", "A", "A");
+        System.out.println(collection);
+        Set<String> set = new HashSet<>(collection);
+        System.out.println(set);
+```
+
+ویژگی هایی که ست ها دارن :
+1. احتماع / union
+```java
+        Set<String> set1 = new HashSet<>(Arrays.asList("a", "b"));
+        Set<String> set2 = new HashSet<>(Arrays.asList("d", "c"));
+        set1.addAll(set2);
+        System.out.println(set1);
+```
+2. احتماع / intersection
+```java
+        Set<String> set1 = new HashSet<>(Arrays.asList("a", "b"));
+        Set<String> set2 = new HashSet<>(Arrays.asList("d", "c" , "b"));
+        set1.retainAll(set2);
+        System.out.println(set1);
+```
+3. تفاوت / difference
+```java
+	        set1.removeAll(set2);
+```
+
+#### hash tables 
+فرض کن که یه لیست یک میلیون یداری از کاربرا و میخوای ببینی که توی اون لیست کاربری هست که لیسته خاصی داشته باشه درش یا نه اینجا مشکل ما همون O(n) هست یک میلیون هست برای حل این مشکل ها ما از مپ ها استفاده میکنیم یا هش تیبل ها که همون دیکشنری های ما هستن 
+هش تیبل ها در پیاده سازی دیکشنری ها استفاده شدن 
+#### map interfaces
+
+```java
+        var c1 = new Customer("a","e1");
+        var c2 = new Customer("b", "e2");
+        Map<String, Customer> map = new HashMap<>();
+        map.put(c1.getEmail(),c1);
+        map.put(c2.getEmail(),c2);
+        var customer = map.get("e1");
+        System.out.println(customer);
+        var customer1 = map.get("e10");
+        System.out.println(customer1);
+        var customer2 = map.getOrDefault("ep1", new Customer("unknown",""));
+        System.out.println(customer2);
+        map.replace("e1", c1, new Customer("c", "e22222222"));
+        System.out.println(map.get("e1"));
+        System.out.println("\n\n\n");
+        for (var values: map.values()){// it's collection object
+            System.out.println(values);
+        }
+        System.out.println("\n\n\n");
+        for (var value: map.keySet()){//  it's a set object
+            System.out.println(value);
+        }
+        System.out.println("\n\n\n");
+        for (var value : map.entrySet()){// it's a entry object 
+            System.out.println(value);
+        }
+```
+
+

@@ -2693,3 +2693,41 @@ public class DeQueueDemo {
 ```
 
 
+### lambda expressions 
+توی این بخش درمورد فانکشنال پروگرمنیگ میگه 
+#### functional interface
+an interface with a single abstract method
+مثلا کامپریبل تنها یک متد compateTo این فانکشنال اینترفیس هست 
+دیفالت متد در اینترفیس ها پیاده سازی دارن
+```java
+package hassandn.com;
+
+public class Main {
+    public static void main(String[] args){
+        greet(new Console());
+        greet(new Printer() {
+            @Override
+            public void print(String message) {
+
+            }
+        });
+    }
+    public static void greet(Printer printer){
+        printer.print("Hello World");
+    }
+}
+package hassandn.com;
+
+public interface Printer {
+    void print(String message);
+}
+package hassandn.com;
+
+public class Console implements Printer{
+    @Override
+    public void print(String message) {
+        System.out.println(message);
+    }
+}
+```
+description for later

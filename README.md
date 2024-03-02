@@ -2699,18 +2699,13 @@ public class DeQueueDemo {
 an interface with a single abstract method
 مثلا کامپریبل تنها یک متد compateTo این فانکشنال اینترفیس هست 
 دیفالت متد در اینترفیس ها پیاده سازی دارن
+
 ```java
 package hassandn.com;
 
 public class Main {
     public static void main(String[] args){
         greet(new Console());
-        greet(new Printer() {
-            @Override
-            public void print(String message) {
-
-            }
-        });
     }
     public static void greet(Printer printer){
         printer.print("Hello World");
@@ -2731,3 +2726,45 @@ public class Console implements Printer{
 }
 ```
 description for later
+
+ما همچنین دیفالت متد داریم توی اینتفرفیس ها که میتونیم کد بزنیم و پیاده سازی داشته باشیم توی اینتر فیسمون 
+تا وقنی که ابسترک متد یکی بیشتر نداشته باشیم توی اینترفیس ما اون رو به صورت فانکشنال اینترفیس میشناسیم
+#### anonymous inner class
+بعضی وقتا ما به صراحت نمیخوایم پیاده سازی ر وانجام بدیم و در اصل میخوام که پیاده سازی رو برای یک جای خاص و فقط یک بار از اون استفاده کنیم و نخوایم جای دیگه از اون استفاده کنیم
+اینها انانیموس هستن چون اسم ندارن ما اونها رو اینر کلاس میگیم چون داخل متد از اون ها استفاده میکنیم و فقط پیاده سازی هستن برای استفاده از اونها کافیه که اینفترفیس رو صدا بزنیم و همونجا پیاده سازی رو انجام بدیم اما توی جاوا 8 تابع های لامبدا اومدن که کار رو حتی راحت تر میکنن
+```java
+package hassandn.com;
+
+public class Main {
+    public static void main(String[] args){
+        greet(new Printer() {
+            @Override
+            public void print(String message) {
+                System.out.println("hello" + message);
+            }
+        });
+    } 
+    public static void greet(Printer printer){
+        printer.print("Hello World");
+    }
+}
+```
+این دقیقا کاری میکنه که پیاده سازی قبلی انجام داده
+#### lambda Expresions
+لامبدا اکسپرشن ها آبجکت هستن ولی ما میتونیم از اونها به عنوان انانیموس فانکشن استفاده کنیم 
+خب پیاده سازی ای که داریم 
+```java
+package hassandn.com;
+
+public class Main {
+    public static void main(String[] args){
+        greet(message -> System.out.println(message));
+        
+    }
+    public static void greet(Printer printer){
+        printer.print("Hello World");
+    }
+}
+
+```
+پیاده سازیش به این صورته ما پارامتر رو مینویسم و بعدش با این علامت -> پیاده سازی رو داریم این چون ما ی

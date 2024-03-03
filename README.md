@@ -2767,4 +2767,61 @@ public class Main {
 }
 
 ```
-پیاده سازیش به این صورته ما پارامتر رو مینویسم و بعدش با این علامت -> پیاده سازی رو داریم این چون ما ی
+پیاده سازیش به این صورته ما پارامتر رو مینویسم و بعدش با این علامت -> پیاده سازی رو داریم این چون ما یکی پارامتر داریم نیازی به اعلان نیست البته اگه هم نوع رو نزاریم قرار نیست به مشکلی بخوریم چون میدونه که از کجا داره استفاده میکنه و خودش تایپ رو چک میکنه 
+
+```java
+        greet((String message) -> System.out.println());
+```
+برای آرگیومنت ها ما میتونیم میتونیم از پرانتز استفاده کنیم و برای پیاده سازی باید از پرانتز های خم استفاده کنیم 
+یکی از فرق های انانیموس و لامبدا اینکه توی انانیموس ها میتونی استیت بزاری و وقتی توی انانیموس ها از کلمه this استفاده کنیم به خوده اینتستنس خوده همون متد دسترسی داریم در حالیکه در لامبدا ما به استیت هایی که توی خوده کلاس هستن دسترسی داریم 
+و اینکه لامبدا استیت نداره خودش و میتونه از استیت های کلاسیی که توش هست استفاده کنه 
+#### method refrences
+این برای این هست که از متد های لمبدا راحت تر بتونیم استفاده کنیم و بدون اینکه پارامتر رو بنویسیم بتونیم فقط متد رو بنویسیم 
+```java
+        greet(System.out::println);
+```
+اینون به این صورت مینویسیم 
+```java
+package hassandn.com;
+
+public class Main {
+    public static void print(String message){
+
+    }
+    public static void main(String[] args){
+        greet(Main::print);
+    }
+    public static void greet(Printer printer){
+        printer.print("Hello World");
+    }
+}
+```
+کد بالا به این صورت هست که میتونیم یک تابع دیگه رو صدا بزنیم حالا اگه تابع ما اینستنس بود خواهیم داشت 
+```java
+package hassandn.com;
+
+public class Main {
+    public void print(String message){
+
+    }
+    public static void main(String[] args){
+        Main demo = new Main();
+        greet(demo::print);
+    }
+    public static void greet(Printer printer){
+        printer.print("Hello World");
+    }
+}
+```
+اینجا یک اینستنس ازش میسازیم و ادامه میدیم 
+اگه خواستیم برای کانستراکتور چیزی اضافه کنیم خواهیم داشت :
+```java
+	greet(message -> new Main(message));
+	greeet(Main::new)
+```
+
+ما چهار نوع فانکشنال اینتفرفیس 
+1.consumer -> takes a single argument and returns no results => void consume(obj)
+2.supplier -> opisite of consumer interface it represent action that need no argument and returns a value => obj supply() 
+3.Fuction -> can map a value to another value => obj map(obj)
+4.Predicate -> it tests values => bool test(condition)

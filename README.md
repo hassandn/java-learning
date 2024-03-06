@@ -2825,3 +2825,4 @@ public class Main {
 2.supplier -> opisite of consumer interface it represent action that need no argument and returns a value => obj supply() 
 3.Fuction -> can map a value to another value => obj map(obj)
 4.Predicate -> it tests values => bool test(condition)
+

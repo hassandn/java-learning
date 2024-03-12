@@ -2825,4 +2825,74 @@ public class Main {
 2.supplier -> opisite of consumer interface it represent action that need no argument and returns a value => obj supply() 
 3.Fuction -> can map a value to another value => obj map(obj)
 4.Predicate -> it tests values => bool test(condition)
+# auto boxing چه بود و چه کرد 
+imperative programming
+declarative programming
+ایمپرتیو میگه که داستان برنامه چجوری باید باشه برای مثال کجا ایف باشه کجا لوپ و... 
+ولی دکلرتیو میگه که چیزی باید انجام بشه مثل اس کیو ال که میگه سلکت کن فلان چیزو از فلان جا 
+پس ایمپرتیو میگه که چه جوری انجام بشه دکلرتیو میگه که چی باید انجام بشه 
+### مثال برای کانسیومر به این صورت هست که:
+فرض کن که یک لیست داریم برای این لیست میتونیم ایمپرتیو پیش بریم که خودمون فلوی کار رو نشون بدیم و یا میتوینم از دکلرتیو پیش بریم که بگیم چه کاری باید انجام بشه  
+```java
+package hassandn.com;
 
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        List<Integer> malist = List.of(1,3,2);
+        
+        // imperative programming
+        for (var item: malist){
+            System.out.println(item);
+        }
+        
+        // declarative programming
+        malist.forEach(item -> System.out.println(item));
+    }
+}
+```
+
+### chaining concumer 
+برای اینکه یک سری کار ها رو انجام بدیم با کانسیومتر ها متدی داره به نام andThen() که میتونی از اون استفاده کنی و یک سری از کار ها رو به صورت زنجیره ای استفاده کنی
+```java
+    public static void main(String[] args){
+        List<String> list = List.of("a", "b" ,"c");
+        Consumer<List> print = item -> System.out.println(item);
+        Consumer<List> printUpperCase = item -> System.out.println(item);
+    }
+```
+#### supplier interface
+```java
+package hassandn.com;
+
+import java.util.function.Supplier;
+
+public class Main {
+    public static void main(String[] args){
+        Supplier<Double> getRandom = () -> Math.random();
+        var rndm = getRandom.get();
+        System.out.println(rndm);
+    }
+}
+```
+دلیل اینکه ما دیتا رو میریزیم توی rndm این هست که این یه چیزی رو ریترن میکنه و باید ی جا ذخیره باشه (right?)
+#### lazy evaluation 
+یعنی صدا زدن تابع وقتی که به اون نیاز داریم این دستور جنریت نمیشه تا وقتی که ما به صورت واضح بگیم که چیکار میخوایم بکنیم 
+#### functional interface
+ما انواع مختلفی داریم برای فانکشنال اینترفیس بایفانکشنال داریم و ...
+مثلا ما intFunction داریم که ولیو از جنس اینت میگیره و ولیو ای به جنس r ریترن میکنه 
+```java
+package hassandn.com;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+public class Main {
+    public static void main(String[] args){
+        Function<String, Integer> length = value -> value.length();
+        var len = length.apply("hi");
+        System.out.println(len);
+    }
+}
+```

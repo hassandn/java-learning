@@ -2896,3 +2896,63 @@ public class Main {
     }
 }
 ```
+```java
+package hassandn.com;
+
+import java.util.function.Function;
+import java.util.function.IntFunction;
+import java.util.function.Supplier;
+
+public class Main {
+    public static void main(String[] args){
+        Function<String, Integer> length = value -> value.length();
+        var len = length.apply("pursuit of happiness");
+        System.out.println(len);
+        IntFunction<Integer> test = (vale) -> vale * vale;
+        var result = test.apply(6);
+        System.out.println(result);
+    }
+}
+```
+declerative programming
+دو راه وجود داره برای اینکه به ترتیب کار ها رو انجام بدیم یکی این هست که از andThen استفاده کنیم و راه دیگش این هست که از compose استفاده کنیم که فرقی ندارن فقط ترتیب کامپوز برعکسه
+#### composing 
+```java
+package hassandn.com;
+
+
+import java.util.function.Function;
+
+public class Main {
+    public static void main(String[] args){
+        //=
+        Function<String, String> replaceWithEqual = value -> value.replace(":","=");
+        // {
+        Function<String, String> addCurlyBraces = value -> "{" + value + "}";
+
+        var restult = replaceWithEqual.andThen(addCurlyBraces).apply("key:value");
+        System.out.println(restult);
+        var result = replaceWithEqual.compose(addCurlyBraces).apply("key:value");
+        System.out.println(result);
+    }
+}
+```
+این کد دو روش رو نشون داده برای اجرا کردن کد
+دکلرتیو پروگرمنیگ یعنی که فقط بگی چه کاری میخوای انجام بشه و پیاده سازیش رو کاری نداشته باشی
+#### predicate interface
+ما از اینها استفاده میکنیم برای فیلتر کردن دیتا 
+```java
+package hassandn.com;
+
+
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+public class Main {
+    public static void main(String[] args){
+        Predicate<String> checklenBiggerThan5 = str -> str.length()>5;
+        var result = checklenBiggerThan5.test("sly33333");
+        System.out.println(result);
+    }
+}
+```

@@ -2956,3 +2956,50 @@ public class Main {
     }
 }
 ```
+حالا میمونه کارکردن با تست های پیچیده ما میتونیم پردیکیت ها رو با هم قاطی کنیم تا تست های بهتری داشته باشیم 
+ما and or negate داریم 
+```java
+package hassandn.com;
+
+
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+public class Main {
+    public static void main(String[] args){
+        Predicate<String> hasRightBrace = (value) -> value.startsWith("{");
+        Predicate<String> hasLeftBrace  = (valye) -> valye.endsWith("}");
+//        var result = hasLeftBrace.negate(hasRightBrace).test("{key:value");
+        var result = hasLeftBrace.negate().test("key:value}");
+        System.out.println(result);
+
+    }
+}
+
+```
+operands -> x y
+operator -> +
+x+y
+
+#### binaryOperator Interface
+مثال: میخوای دوتا عدد رو جمع کنی و بعد اونها رو مربع کنی
+```java
+        BinaryOperator<Integer> add = (a,b) -> a + b;
+        Function<Integer, Integer> square = (a) -> a * a;
+        var result = add.andThen(square).apply(2,1);
+        System.out.println(result);
+```
+#### Unary Interface
+
+برای متد هایی هست که یک کار رو انجام میدن 
+```java
+        UnaryOperator<Integer> increment = x -> x + 1;
+        UnaryOperator<Integer> squar = x -> x*x;
+        var result = increment.andThen(squar).apply(1);
+        System.out.println(result);
+```
+# streams
+یکی از فیچر های جاوا هست که اجازه میده از کالکشن ها در دکلرتیو استفادشون کنیم 
+
+
+

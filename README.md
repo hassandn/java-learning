@@ -3000,6 +3000,52 @@ x+y
 ```
 # streams
 یکی از فیچر های جاوا هست که اجازه میده از کالکشن ها در دکلرتیو استفادشون کنیم 
+استریم ها اومدن که کمک کنن فلوی برنامه به صورت دکلرتیو باشه به صورت فانکشنال باشه 
+استریم ها برای استفاده از کالکشن ها هستن کالکشن ها مثل منبع هستن و استریم ها مثل لوله ها هستن که از اون منبع کشیده میشن و این کار به صورت دکلرتیو هست 
+```java
+package hassandn.com;
+
+public class Movies {
+    private String name;
+    private int likes;
+    public Movies(String name,
+                  int likes)
+    {
+        this.name = name;
+        this.likes =likes;
+    }
+    public int getLikes(){
+        return likes;
+    }
+}
+package hassandn.com;
+
+
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        List<Movies> movies = List.of(
+                new Movies("a",10),
+                new Movies("b", 12),
+                new Movies("c", 15)
+                );
+        // imperative programming(how something should be done)
+        int counter = 0;
+        for (var items : movies){
+            if (items.getLikes()>10){
+                counter ++;
+            }
+        }
+        System.out.println(counter);
+
+    }
+}
+        // Declarative programming(Functional)(what should be done)
+        var result = movies.stream().filter(movie -> movie.getLikes() > 10).count();
+        System.out.println(result);
+
+```
 
 
 

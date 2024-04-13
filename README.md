@@ -3085,3 +3085,92 @@ lazy evaluation یعنی کد رو نوشتیم ولی هر وقت که نیاز
 	Stream.iterator(1, n -> n+1).limit(3).forEach(n -> System.out.prinltn(n));
 	
 ```
+فانکشنال پروگرامنیگ نوعی از دکلرتیو پروگرامینگ هست که با صدا زدن اسم تابع فقط میگیم که چه کاری باید انجام بشه 
+هر کالکشنی در جاوا متدی به نام استریم داره که اون استریم های آبجکت برمیگردونن
+```java
+package hassandn.com;
+
+
+import java.util.List;
+import java.util.stream.Stream;
+
+public class Main {
+    public static void main(String[] args){
+        List<Movies> movie = List.of(
+                new Movies("a",2),
+                new Movies("b", 13),
+                new Movies("c", 14)
+        );
+
+        var count = movie.stream().filter(item -> item.getLikes() > 12).count();
+        System.out.println(count);
+    }
+}
+```
+ما میتونیم داده ها رو در استریم ها ذخیره کنیم دو راه برای این کار وجود داره یکی استفاده از استریم.جنریت هست 
+```java
+        var stream = Stream.generate(() -> Math.random());
+        stream.limit(5).forEach(n -> System.out.println(n));
+```
+ما یک راه دیگه هم داریم به نام ایترریت متد 
+```java
+        Stream.iterate(1,n-> n +1).limit(1_400_000).forEach(n -> System.out.println(n));
+```
+#### mapping elements
+مپینگ یعنی دو تا نوع داده رو برداریم و یکیشون کنیم و یک نوع داده جدید بدست بیاریم 
+```java
+package hassandn.com;
+
+
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        var movies = List.of(
+                new Movies("A", 10),
+                new Movies("B", 20),
+                new Movies("C", 30)
+        );
+        movies.stream().map(mov -> mov.getName()).forEach(name -> System.out.println(name));
+    }
+}
+```
+ی مبحث دیگه داریم به نام فلت مپ که دوتا مجموعه جدا رو میتونی یکی کنی 
+```java
+package hassandn.com;
+
+
+import java.util.List;
+import java.util.stream.Stream;
+
+public class Main {
+    public static void main(String[] args){
+        var strm = Stream.of(List.of(1, 2, 3),List.of(4, 5, 6));
+        strm.forEach(list -> System.out.println(list));
+    }
+}
+[1, 2, 3]
+[4, 5, 6]
+```
+
+```java
+package hassandn.com;
+
+
+import java.util.List;
+import java.util.stream.Stream;
+
+public class Main {
+    public static void main(String[] args){
+        var strm = Stream.of(List.of(1, 2, 3),List.of(4, 5, 6));
+        strm.flatMap(list -> list.stream())
+        .forEach(list -> System.out.println(list));
+    }
+}
+1
+2
+3
+4
+5
+6
+```

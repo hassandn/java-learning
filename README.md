@@ -3174,3 +3174,75 @@ public class Main {
 5
 6
 ```
+ما چند دو نوع استریم داریم 
+intermediate streams -> It return a new stream / map() filter()
+terminal streams -> forEach()
+اینترمیدیت میاد و این شکلی میشه که یک استریم جدید درست میکنه و تا اینکه اون رو در ترمینال صدا نزنیم اجرایی نمیشن برای مثال داریم :
+```javapackage hassandn.com;
+
+
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("A", 12),
+                new Movies("B", 15),
+                new Movies("C", 25)
+        );
+
+        movie.stream()
+                                            .filter(m -> m.getLikes() > 12).count();
+    }
+}
+```	
+اینجا هیچ اتفاقی نمیوفته تا وقتی که فور ایچ رو براشون صدا میزنیم 
+```java
+package hassandn.com;
+
+
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("A", 12),
+                new Movies("B", 15),
+                new Movies("C", 25)
+        );
+        movie.stream()
+                .filter(m -> m.getLikes() > 12)
+                .forEach(n -> System.out.println(n.getName()));
+    }
+}
+```
+ما میتونیم این کد رو مختصر تر بنویسم و یک قسمتش رو کوتاه تر بنویسیم از اونجایی که فیلتر داخل پرانتز یک پریدیکیت میگیره برای همین داریم : 
+```java
+package hassandn.com;
+
+
+import java.util.List;
+import java.util.function.Predicate;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("A", 12),
+                new Movies("B", 15),
+                new Movies("C", 25)
+        );
+        Predicate<Movies> checkLikes = m -> m.getLikes() > 12;
+        movie.stream()
+                .filter(checkLikes)
+                .forEach(n -> System.out.println(n.getName()));
+    }
+}
+```
+#### slicing streams
+ما چهار نوع اسلاسینگ استریم داره 
+1. limit()
+2. skip() -> Its good for pagenation
+3. takeWhile(Predicate)
+4. dropWhile(Predicate)
+اسکیپ برای پجینیشن استفاده میشه که مثلا کد رو طوری بنویسی که مثلا پیج فلان n تا رو رد کنه البته باید لیمیت هم بزاریم
+فرق دراپ وایل و لیمیت اینکه لیمیت کله دیتا رو بررسی میکنه دراپ وایل وقتی شرط رفت استاپ میکنه

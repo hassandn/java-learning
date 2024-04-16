@@ -3246,3 +3246,180 @@ public class Main {
 4. dropWhile(Predicate)
 اسکیپ برای پجینیشن استفاده میشه که مثلا کد رو طوری بنویسی که مثلا پیج فلان n تا رو رد کنه البته باید لیمیت هم بزاریم
 فرق دراپ وایل و لیمیت اینکه لیمیت کله دیتا رو بررسی میکنه دراپ وایل وقتی شرط رفت استاپ میکنه
+```java
+package hassandn.com;
+
+
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("A", 12),
+                new Movies("D", 56),
+                new Movies("B", 15),
+                new Movies("C", 25)
+        );
+        movie.stream()
+                .limit(2)
+                .filter(n -> n.getLikes() > 12)
+                .forEach(n -> System.out.println(n.getName()));
+        System.out.println();
+        System.out.println(1);
+        System.out.println();
+        movie.stream()
+                .skip(2)
+                .forEach(n -> System.out.println(n.getName()));
+        System.out.println();
+        System.out.println(2);
+        System.out.println();
+        movie.stream()
+                .takeWhile(n -> n.getLikes() >15)
+                .forEach(n -> System.out.println(n.getName()));
+        System.out.println();
+        System.out.println(3);
+        System.out.println();
+        movie.stream()
+                .dropWhile(n -> n.getLikes() >80)
+                .forEach(n -> System.out.println(n.getName()));
+    }
+}
+```
+####  sorting streams
+برای سورت کردن دو تا راه داریم اولی اینکه توی خوده کلاسه یک متد داشته باشیم که خودش مقایسه کنه و دومی اینکه یک متد لامبدا بنویسیم
+اولین روش به این صورت هست که :
+```java
+package hassandn.com;
+
+public class Movies implements Comparator {
+    private String name;
+    private int likes;
+```
+و بعد پیاده سازی متد رو انجام میدیم
+ی راهه دیگش اینکه یک لامبدا درست کنیم که داریم:
+```java
+package hassandn.com;
+
+
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("C", 12),
+                new Movies("D", 56),
+                new Movies("B", 15),
+                new Movies("A", 25)
+        );
+        movie.stream()
+                .sorted((a, b) -> a.getName().compareTo(b.getName()))
+                .forEach(n -> System.out.println(n.getName()));
+    }
+}
+```
+ی راه ساده ترم هست برای نوشتن این که میگه:
+یک متد استاتیک هست توی اینترفیس کامپریتور
+```java
+package hassandn.com;
+
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("C", 12),
+                new Movies("D", 56),
+                new Movies("B", 15),
+                new Movies("A", 25)
+        );
+        movie.stream()
+//                .sorted((a, b) -> a.getName().compareTo(b.getName()))
+                .sorted(Comparator.comparing(Movies::getName))
+                .forEach(n -> System.out.println(n.getName()));
+    }
+}
+```
+#### Getting unique Elements
+فرض کن که ما به جای لایک ها قیمت فیلم ها رو داریم برای همین داریم میخوام کلا قیمت ها رو ببینیم و برامون مهم نیست که چه تعداد از اون قیمت ها رو داریم برای همین خواهیم داشت
+```java
+package hassandn.com;
+
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("C", 12),
+                new Movies("D", 56),
+                new Movies("B", 15),
+                new Movies("A", 25),
+                new Movies("a", 25)
+        );
+        movie.stream()
+                .map(Movies::getLikes)
+                .distinct()
+                .forEach(System.out::println);
+    }
+}
+
+12
+56
+15
+25
+```
+طوری که نوشتم متد پرینت رو میگن بهش متد رفرنس
+#### peeking Elements
+این برای ترابل شوتینگ مناسبه چون میتونی وسط استریم اونها رو قرار بدی و فلوی کارتو چک کنی برای مثال داریم:
+دلیل اینکه نمیتونیم از forEach برای این کار استفاده کنیم این هست که فورایچ ترمینال هست 
+#### Reducers	
+```java
+package hassandn.com;
+
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("C", 12),
+                new Movies("D", 56),
+                new Movies("B", 15),
+                new Movies("A", 25),
+                new Movies("a", 25)
+        );
+        var result = movie.stream()
+                .anyMatch(m -> m.getLikes() > 49);
+        System.out.println(result);
+    }
+}
+```
+```java
+package hassandn.com;
+
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("C", 12),
+                new Movies("D", 56),
+                new Movies("B", 15),
+                new Movies("A", 25),
+                new Movies("a", 25)
+        );
+        var result = movie.stream()
+                .allMatch(m -> m.getLikes() > 49);
+
+        System.out.println(result);
+
+    }
+}
+
+```

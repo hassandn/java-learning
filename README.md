@@ -3376,6 +3376,7 @@ public class Main {
 این برای ترابل شوتینگ مناسبه چون میتونی وسط استریم اونها رو قرار بدی و فلوی کارتو چک کنی برای مثال داریم:
 دلیل اینکه نمیتونیم از forEach برای این کار استفاده کنیم این هست که فورایچ ترمینال هست 
 #### Reducers	
+##### Simple Reducers
 ```java
 package hassandn.com;
 
@@ -3423,3 +3424,74 @@ public class Main {
 }
 
 ```
+```java
+package hassandn.com;
+
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("C", 12),
+                new Movies("D", 56),
+                new Movies("B", 15),
+                new Movies("A", 25),
+                new Movies("a", 25)
+        );
+        var result = movie.stream()
+                .noneMatch(m -> m.getLikes() > 100);
+
+        System.out.println(result);
+    }
+}
+```
+```java
+package hassandn.com;
+
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("C", 12),
+                new Movies("D", 56),
+                new Movies("B", 15),
+                new Movies("A", 25),
+                new Movies("a", 25)
+        );
+        var result = movie.stream()
+                .findFirst().get();
+
+        System.out.println(result.getName());
+    }
+}
+```
+```java
+package hassandn.com;
+
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("C", 12),
+                new Movies("D", 56),
+                new Movies("B", 15),
+                new Movies("A", 25),
+                new Movies("a", 250)
+        );
+        var result = movie.stream()
+                .max(Comparator.comparing(Movies::getLikes))
+                .get();
+
+    }
+}
+```
+توی این کد میاد و بر اساس تعداد لایک ها مقایسه میکنه و اونیکه بیشتره رو نشون میده 
+##### Reduceing a Stream

@@ -3495,3 +3495,113 @@ public class Main {
 ```
 توی این کد میاد و بر اساس تعداد لایک ها مقایسه میکنه و اونیکه بیشتره رو نشون میده 
 ##### Reduceing a Stream
+فرض کن که میخوای تعداد لایک های همه فیلم ها رو بشماریم اینطور خواهیم داشت:
+```java
+package hassandn.com;
+
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("C", 12),
+                new Movies("D", 56),
+                new Movies("B", 15000),
+                new Movies("A", 25),
+                new Movies("a", 250)
+        );
+        var result = movie.stream()
+                .map(m -> m.getLikes())
+                .reduce((a,b) -> a+b);
+        System.out.println(result.orElse(3));
+    }
+}
+```
+کلاس آپشنال یک آبجکتی رو برمیگردونه که شاید ولیو ای رو برنگردونه برای همین ما یک دونه چیز پیشفرض براش میزاریم
+ما میتونیم همچنین اینطوری این رو بنویسیم
+```java
+                .reduce(Integer::sum);
+```
+حتی میتونیم برای اینکه اور الس نزاشته باشیم میتونیم از دستور زیر استفاده کنیم 
+یک مدل دیگه هم داره که یک ایدندیتی داره که میتونیم با استفاده از اون از اور الس استفاده نکنیم و همینطور فقط مشخص کنیم که چه چیزی بزاره که این همون بالایی هست که اورراید شده فقط
+#### collectors
+وقتی میخوای که دیتایی که داره استریم میاد داخل یک ساختار داده ثبت بشه خواهیم داشت
+```java
+package hassandn.com;
+
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("C", 12),
+                new Movies("D", 56),
+                new Movies("B", 15000),
+                new Movies("A", 25),
+                new Movies("a", 250)
+        );
+        var result = movie.stream()
+                .filter(m -> m.getLikes() >234)
+                .map(m -> m.getName())
+                .collect(Collectors.toList());
+        System.out.println(result);
+    }
+}
+```
+```java
+package hassandn.com;
+
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class Main {
+    public static void main(String[] args){
+        var movie = List.of(
+                new Movies("C", 12),
+                new Movies("D", 56),
+                new Movies("B", 15000),
+                new Movies("A", 25),
+                new Movies("a", 250)
+        );
+        var result = movie.stream()
+                .filter(m -> m.getLikes() >234)
+                .collect(Collectors.toMap(key -> key.getName(),value -> value.getLikes()));
+        System.out.println(result);
+    }
+}
+```
+یه چیزه خیلی باحالیم که داریم سامریازینگ هست که یک خلاصه از لیستی که درست شده میگه مثلا اوریج چقدره مین چیه مکس چیه و...
+```java
+package hassandn.com;
+
+
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+
+public class Main {
+    public static void main(String[] args){
+        Locale locale = new Locale("en", "US");
+        Locale.setDefault(locale);
+
+        var movie = List.of(
+                new Movies("C", 12),
+                new Movies("D", 56),
+                new Movies("B", 15000),
+                new Movies("A", 25),
+                new Movies("a", 250)
+        );
+        var result = movie.stream()
+                .collect(Collectors.summarizingInt(m -> m.getLikes()));
+        System.out.println(result);
+    }
+}
+```
+این قسمته زبان و منطقه هم مهم هستش به یاد داشته باش که وقتی این رو تنظیم نکنی بعضی جاها اذیتت میکنه 

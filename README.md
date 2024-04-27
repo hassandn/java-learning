@@ -3604,4 +3604,205 @@ public class Main {
     }
 }
 ```
+متیونیم همچنین اون ها رو به صورت یک استرینگ در بیاریم و اونها رو جوین بدیم به هم دیگه 
+```java
+package hassandn.com;
+
+
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+
+public class Main {
+    public static void main(String[] args){
+        Locale locale = new Locale("en", "US");
+        Locale.setDefault(locale);
+
+        var movie = List.of(
+                new Movies("C", 12),
+                new Movies("D", 56),
+                new Movies("B", 15000),
+                new Movies("A", 25),
+                new Movies("a", 250)
+        );
+
+        var result = movie.stream()
+                .filter(m -> m.getLikes() > 10)
+                .map(Movies::getName)
+                .collect(Collectors.joining(", "));
+        System.out.println(result);
+    }
+}
+```
 این قسمته زبان و منطقه هم مهم هستش به یاد داشته باش که وقتی این رو تنظیم نکنی بعضی جاها اذیتت میکنه 
+
+##### Grouping Elements
+فرض کن که میخوای گروه بندی کنی دیتا ها رو برای اینکار لازمه که از گروپینگ المنت ها استفاده کنی
+برای مثال داریم:
+اول از هم باید برای فیلم ها جانر درست کنیم برای همین یک کلاس درست میکنیم به نام جانر و تایپش رو میزاریم اینام enum برای این هست که جانر ها رو عوض کنیم مثالش:
+```java
+enum Level {
+  LOW,
+  MEDIUM,
+  HIGH
+}
+Level myVar = Level.MEDIUM;
+```
+در کد خودمون داریم:
+```java
+package hassandn.com;
+
+public enum Genre {
+    COMEDY,
+    DRAMA,
+    ACTION,
+}
+```
+```java
+package hassandn.com;
+
+
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+
+public class Main {
+    public static void main(String[] args){
+        Locale locale = new Locale("en", "US");
+        Locale.setDefault(locale);
+
+        var movie = List.of(
+                new Movies("C", 12, Genre.ACTION),
+                new Movies("D", 56, Genre.COMEDY),
+                new Movies("B", 15000, Genre.DRAMA),
+                new Movies("A", 25, Genre.ACTION),
+                new Movies("a", 250, Genre.COMEDY)
+        );
+
+        var result = movie.stream()
+                .collect(Collectors.groupingBy(Movies::getGenre));
+        System.out.println(result);
+
+    }
+}
+```
+حالا ما اینجا وقتی فیلتر کردیم میتوینم 	
+میتونیم حتی اون ها رو به شکل ست بزاریم:
+```java
+package hassandn.com;
+
+
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+
+public class Main {
+    public static void main(String[] args){
+        Locale locale = new Locale("en", "US");
+        Locale.setDefault(locale);
+
+        var movie = List.of(
+                new Movies("C", 12, Genre.ACTION),
+                new Movies("D", 56, Genre.COMEDY),
+                new Movies("B", 15000, Genre.DRAMA),
+                new Movies("A", 25, Genre.ACTION),
+                new Movies("a", 250, Genre.COMEDY)
+        );
+
+        var result = movie.stream()
+                .collect(Collectors.groupingBy(Movies::getGenre
+                        ,Collectors.toSet()));
+        System.out.println(result);
+    }
+}
+```
+حالا فرض کن که میخوایم این رو به صورت استرینگ بنویسم که اسم هر جانر رو با کاما از همدیگه جدا کنه
+ما اینجا داریم:
+```java
+package hassandn.com;
+
+
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+
+public class Main {
+    public static void main(String[] args){
+        Locale locale = new Locale("en", "US");
+        Locale.setDefault(locale);
+
+        var movie = List.of(
+                new Movies("C", 12, Genre.ACTION),
+                new Movies("D", 56, Genre.COMEDY),
+                new Movies("B", 15000, Genre.DRAMA),
+                new Movies("A", 25, Genre.ACTION),
+                new Movies("a", 250, Genre.COMEDY)
+        );
+
+        var result = movie.stream()
+                .collect(Collectors.groupingBy(Movies::getGenre
+                        ,Collectors.mapping(Movies::getName
+                                ,Collectors.joining( ", "))));
+        System.out.println(result);
+    }
+}
+```
+برای اینکه پارتیشن بندی کنیم خواهیم داشت:
+مثلا فکر کن فیلم های بالای 20 تا لایک و زیره بیست لایک رو میخوای جدا کنی برای این خواهی داشت:
+```java
+package hassandn.com;
+
+
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+
+public class Main {
+    public static void main(String[] args){
+        Locale locale = new Locale("en", "US");
+        Locale.setDefault(locale);
+
+        var movie = List.of(
+                new Movies("C", 12, Genre.ACTION),
+                new Movies("D", 56, Genre.COMEDY),
+                new Movies("B", 15000, Genre.DRAMA),
+                new Movies("A", 25, Genre.ACTION),
+                new Movies("a", 250, Genre.COMEDY)
+        );
+
+        var result = movie.stream()
+                        .collect(Collectors.partitioningBy(m -> m.getLikes() > 20,Collectors.mapping(Movies::getName,Collectors.joining(", "))));
+        System.out.println(result);
+
+    }
+}
+```
+##### primitive streams
+این برای پریمیتیو تایپ ها هست مثل دابل اینت و ... و میتونی مثلا رنج بزاری برای اونها 
+```java
+package hassandn.com;
+
+
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+public class Main {
+    public static void main(String[] args){
+        Locale locale = new Locale("en", "US");
+        Locale.setDefault(locale);
+
+        var movie = List.of(
+                new Movies("C", 12, Genre.ACTION),
+                new Movies("D", 56, Genre.COMEDY),
+                new Movies("B", 15000, Genre.DRAMA),
+                new Movies("A", 25, Genre.ACTION),
+                new Movies("a", 250, Genre.COMEDY)
+        );
+        IntStream.range(0, 5)
+                .forEach(System.out::println);
+    }
+}
+```
+### concurrency

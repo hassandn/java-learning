@@ -3806,3 +3806,151 @@ public class Main {
 }
 ```
 ### concurrency
+#### process and Thread
+پراسس یک شئ از برنامه یا اپلیکیشن ماست پراسس ایمیج کده برنامه رو داره 
+os میتونه در لحظه کلی پراسس رو اجرا کنه در لحظه 
+ما یک ترد اصلی داریم در کد ها که میتونیم ترد های جدید برای اون ایجاد کنیم 
+```java
+package hassandn.com;
+
+
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+public class Main {
+    public static void main(String[] args){
+        Locale locale = new Locale("en", "US");
+        Locale.setDefault(locale);
+        System.out.println(Thread.activeCount());//get number of active threads
+        System.out.println(Runtime.getRuntime().availableProcessors());// get number of active threads
+        
+    }
+}
+```
+اولی تعداد ترد هایی که استفاده میکنه رو نشون میده برای مثال داریم اینجا که 2 یکی برای کده اصله کاری هست و یکی دیگه برای کاربیج کالکتور هست که ابجکت های اضافه رو برمیداره و میندازه توی سطل آشفال
+برای اینکه ترد ها رو استارت بزنیم در جاوا داریم:
+برای اینکه کد رو بتونیم در یک ترد اجرا کنیم باید یک کلاس درست کنیم برای کاری که میخوایم انجام بدیم و بعد اون از Runnable ارث بری کنه و بعد ما میتونیم این کار رو اجرا کنیم 
+```java
+package hassandn.com;
+
+public class DownloadFIleTask implements Runnable {
+
+    @Override
+    public void run() {
+        System.out.println("Downloading File "+ Thread.currentThread().getName());
+    }
+}
+package hassandn.com;
+
+
+
+public class Main {
+    public static void main(String[] args){
+        System.out.println(Thread.currentThread().getName());
+        Thread thread = new Thread(new DownloadFIleTask());
+        thread.start();
+
+
+    }
+}
+```
+جاوا ی چیز داره به نام ترد اسکجوئل که برنامه ریزی میکنه که اکه تعداد کور ها کم بود هی بین ترد ها عوض کنه تا ما فکلر کنیم که ترد ها دارن جدا جدا کار انجام میدن 
+#### pausing a thread
+برای اینکه یک ترد رو پاز بدیم خواهیم داشت :
+```java
+package hassandn.com;
+
+public class DownloadFIleTask implements Runnable {
+
+    @Override
+    public void run() {
+        System.out.println("Downloading File "+ Thread.currentThread().getName());
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(Thread.currentThread().getName() + " Is now Unable");
+    }
+}
+```
+#### joining threads
+برای اینکه ترد ها رو بهم بچسبونیم از JOIN استفاده میکنیم 
+```java
+package hassandn.com;
+
+
+
+public class Main {
+    public static void main(String[] args){
+        System.out.println(Thread.currentThread().getName());
+
+        Thread thread = new Thread(new DownloadFIleTask());
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("its a main thread and its ended");
+
+    }
+}
+```
+توی این کد ترد مین صبر میکنه برای ترد دانلود وقتی کارش تموم شد مرچ میشن و به کار ادامه میده 
+#### interrupting threads
+اینتراپت برای مجبور کردن به قطع ترد نیست بلکه برای این هست که درخواست میکنه که اونترد متوقف بشه برای همین باید تو کدی که برای ترد مینویسیم قسمتی باشه که چک کنه که آیا ما ترد رو میگیم یا نه مثلا برای دانلود بعد از دو ثانیه میخوایم که دانلود متوقف بشه برای این باید توی کد وقتی دانلود میکنه بالاش چک کنیم که آیا اینتراپت اومده یا نه 
+
+```java
+package hassandn.com;
+
+public class DownloadFIleTask implements Runnable {
+
+    @Override
+    public void run() {
+        System.out.println("Downloading File "+ Thread.currentThread().getName());
+        for (var I = 0; I < Integer.MAX_VALUE; I++){
+            System.out.println("downloading "+ I);
+        }
+        System.out.println(Thread.currentThread().getName() + " Is now Unable");
+    }
+}
+```
+در کل ایتراپت رو مین میده ولی در اصله کار اون خوده ترده هست که مشخل میکنه باید کنکلش کنه یا نه 
+```java
+package hassandn.com;
+
+
+
+public class Main {
+    public static void main(String[] args){
+        System.out.println(Thread.currentThread().getName());
+
+        Thread thread = new Thread(new DownloadFIleTask());
+        thread.start();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        thread.interrupt();
+
+    }
+}
+package hassandn.com;
+
+public class DownloadFIleTask implements Runnable {
+
+    @Override
+    public void run() {
+        System.out.println("Downloading File "+ Thread.currentThread().getName());
+        for (var I = 0; I < Integer.MAX_VALUE; I++){
+            if (Thread.currentThread().isInterrupted()) return;
+            System.out.println("downloading "+ I);
+        }
+        System.out.println(Thread.currentThread().getName() + " Is now Unable");
+    }
+}
+```

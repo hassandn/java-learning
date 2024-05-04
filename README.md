@@ -3954,3 +3954,90 @@ public class DownloadFIleTask implements Runnable {
     }
 }
 ```
+
+#### Joining threads 
+فک کن که میخوای وقتی ی فایلی دانلود شد اون رو اسکن کنی برای این ما نمیتونیم از اسلیپ استفاده کنیم چون نمیدونیم چقدر طول میکشه این کار برای همین ی راه کثیفش اینکه از thread.joining() استفاده کنیم 
+```java
+package hassandn.com;
+
+
+
+public class Main {
+    public static void main(String[] args){
+        Thread thread = new Thread(new DownloadFIleTask());
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("File Ready to be scanned!");
+
+
+    }
+}
+```
+مشکل این کار اینکه ترد اصلی باید منتظر باشه تا کاره اون تموم بشه برای همین باید ی کار بهتر انجام بدیم
+```java
+package hassandn.com;
+
+
+
+public class Main {
+    public static void main(String[] args){
+        Thread thread = new Thread(new DownloadFIleTask());
+        thread.start();
+
+        try {
+            Thread.sleep(100);
+            System.out.println("-----------------------------------------------------TIME OUT-----------------------------------------------------");
+        } catch (InterruptedException e){
+            throw new RuntimeException(e);
+        }
+        thread.interrupt();
+        System.out.println("File Ready to be scanned!");
+
+
+    }
+}
+package hassandn.com;
+
+public class DownloadFIleTask implements Runnable {
+
+    @Override
+    public void run() {
+        System.out.println("downloading...");
+        var file = new FileToDownload(500_000);
+
+        for (int i =0;i<file.sizeGetter();i=i+10) {
+            if (Thread.currentThread().isInterrupted()) return;
+            System.out.println(i);
+        }
+
+    }
+}
+package hassandn.com;
+
+public class FileToDownload {
+    double size;
+    public  FileToDownload(double size){
+        this.size =size;
+    }
+
+    public double sizeGetter(){
+        return size;
+    }
+}
+
+```
+#### Interrupting a Thread 
+وقتی ی ترد داریم که ی کاره زیادی رو انجام میده و به کاربر میخوایم بگیم که بتونه کنسل کنه 
+اگه ترد اسلیپ باشه و ما بهش یگیم انتراپت کنه اکسپشن میندازه برای همین باید چکش کنیم
+#### Concurrency Issues
+مالتی پل ترد ها به یک آبجکت دسترسی دارن برای همین ی سری مشکلات پیش میاد هم برای دانلود و هم برا مثال اینکه یکی آبجکت رو عوض کرده ولی برای بقیه ترد ها اون عوض نشده 
+اولین مشکل اینکه همشون بخوان هم زمان یک آبجکت رو تغییر بدن به صورت همزمان که بهش میگن Race Condition
+دومی اینکه یک ترد دیتا رو عوض میکنه ولی تغییرات برای بقیه ترد ها قابل نمایش نیستن که بهش میگن Visibility Problem
+برای اینکه به این مشکلات نخوریم باید از Thread Safe Code استفاده کنیم 
+توی داکیومنتیشن جاوا این هست مثلا میگه که فلان کلاس ترد سیف هست 
+#### Race Condition

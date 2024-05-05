@@ -4041,3 +4041,91 @@ public class FileToDownload {
 برای اینکه به این مشکلات نخوریم باید از Thread Safe Code استفاده کنیم 
 توی داکیومنتیشن جاوا این هست مثلا میگه که فلان کلاس ترد سیف هست 
 #### Race Condition
+توی این کد ده تا ترد داریم که به یک آبجکت همزمان متصل هستن تا اون ور تغییر بدن :
+```java
+package hassandn.com;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+
+        var status = new DownloadStatus();
+
+        List<Thread> threads = new ArrayList<>();
+        for (int i =0;i <11 ;i++){
+            var thread = new Thread(new DownloadFIleTask(status));
+            thread.start();
+            threads.add(thread);
+        }
+        for (var thread: threads){
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        System.out.println(status.getTotalBytes());
+    }
+}
+package hassandn.com;
+
+public class DownloadFIleTask implements Runnable {
+
+    private DownloadStatus status;
+
+    public DownloadFIleTask(DownloadStatus status) {
+
+        this.status = status;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("downloading...");
+        for (int i=0;i < 10_000;i++){
+            if (Thread.currentThread().isInterrupted()) return;
+            status.increamentTotalBytes();
+        }
+
+
+    }
+}
+package hassandn.com;
+
+public class DownloadStatus {
+    private int totalBytes;
+
+    public void increamentTotalBytes(){
+        totalBytes++;
+    }
+
+    public int getTotalBytes(){
+        return totalBytes;
+    }
+}
+```
+اینجا هیچ وقت جواب نمیشه 10_000 چون همه ترد ها به هم وصلن و مشخص نیست کی کاره اون ترده تموم میشه به این میگن race condition
+non atomic operation 
+چون چند تا کار نیاز داره برای اینکریمنت کردن بهش میگن نان اتومیک 
+
+#### strategies for thread safety
+یک روش برای اینکه به این مشکل دیگه بر نخوریم 
+1. confinment
+یعنی اینکه از همون اول این کار رو نکنیم برای مثال به جای اینکه همه ترد ها یک آبجکت داشته باشن برای شیر کردن دیتا خواهیم دید که به مشکل میخوریم برای همین بهتره که برای هر دانلود تسک یک تکه برای استتوسش باشه
+2. immutability
+استفاده از آبجکت های غیر قابل تغییر مثلا آبجکت های استرینگ ایمیوتیبل هستن و تغییر نمیکنن و اگه ازشون آپر کیس درست کنیم در اصل تغییری نمیکنن
+3. synchronization
+جلوگیری کردن از دسترسی همزمان چند تا ترد به یک آجبکت ماز لاک استفاده میکنیم برای اینکار یعنی اینکه قفل میزنیم و فقط یک ترد میتونه با این آجبکت در زمان کار کنه
+اینجا یک سری مشکلا پیش میاد اول اینکه به صورت صف طور کار میکنن اینا و ی مشکل دیگش اینکه deadlock هست که ترد یک منتظره ترده دو هست در حالیکه ترده دو منتظره ترد یک هست
+و به صورت کلی باید تا جایی که میشه از سینکورانایزیشن دوری کرد
+4. atomic objects
+ی راه دیگه استفاده از کلاس های اتومیک هست مثل اتومیک اینتیجر ها
+مثلا به جای اینکه برای اضافه کردن نیاز به سه مرحله باشه(گرفتن دیتا اضافه کردنش و بعد سیو کردنش) همش توی یک سیکل انجام میشه اینها مثل اتم هستن نمیتونن بشکنن
+5. partitioning
+یعنی دیتا رو بزاری توی سگمنتی که بشه همزمان به اون دیتا دسترسی داشت
+جاوا کلی کلاس کانکارنس داره که میتونیم به دیتا به صورت پارتیشیونالی دسترسی داشته باشیم
+#### confinment
+

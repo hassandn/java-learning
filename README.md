@@ -4128,4 +4128,145 @@ non atomic operation
 یعنی دیتا رو بزاری توی سگمنتی که بشه همزمان به اون دیتا دسترسی داشت
 جاوا کلی کلاس کانکارنس داره که میتونیم به دیتا به صورت پارتیشیونالی دسترسی داشته باشیم
 #### confinment
+توی کاینفاینمت میایم برای هر ترد یک آبجکت میزاریم در کد زیر داریم :
+```java
+package hassandn.com;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args){
+        List<Thread> threads = new ArrayList<>();
+        List<DownloadFIleTask> tasks = new ArrayList<>();
+
+        for (int i =0;i <11 ;i++){
+            DownloadFIleTask task = new DownloadFIleTask();
+            tasks.add(task);
+
+            var thread = new Thread(task);
+            thread.start();
+            threads.add(thread);
+        }
+        for (var thread: threads){
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        var result = tasks
+                .stream()
+                .map(t -> t.getStatus().getTotalBytes())
+                .reduce(Integer::sum);
+        System.out.println(result);
+        ;
+    }
+}
+
+package hassandn.com;
+
+import java.io.File;
+
+public class FileToDownload {
+    private double size;
+    public  FileToDownload(double size){
+        this.size =size;
+    }
+
+    public void fileIncreament(){
+        size++;
+    }
+    public double sizeGetter(){
+        return size;
+    }
+}
+
+package hassandn.com;
+
+public class DownloadStatus {
+    private int totalBytes;
+
+    public void increamentTotalBytes(){
+        totalBytes++;
+    }
+
+    public int getTotalBytes(){
+        return totalBytes;
+    }
+}
+
+package hassandn.com;
+
+public class DownloadFIleTask implements Runnable {
+
+
+    private DownloadStatus status;
+
+
+    public DownloadFIleTask() {
+
+        this.status = new DownloadStatus();
+    }
+
+    @Override
+    public void run() {
+        System.out.println("downloading...");
+        for (int i=0;i < 10_000;i++){
+            if (Thread.currentThread().isInterrupted()) return;
+            status.increamentTotalBytes();
+        }
+
+
+    }
+    public DownloadStatus getStatus() {
+        return status;
+    }
+}
+
+```
+#### locks 
+ی راه دیگه برای اینکه جلوگیری کنیم از مشکله race condition برای همین باید سینکرونایز کنیم برای اینکار از لاک ها استفاده میکنیم تا به جاوا ویچوال ماشین بگیم فقط یک ترد در لحظه استفاده کنه از داده که بهش میگن critical section
+برای این تنها کاری که لازمه انجام بدیم اینکه یک آبجکت از لاک بسازیم و از این اینطوری برای آبجکتی که در خطره استفاده کنیم 
+```java
+package hassandn.com;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class DownloadFIleTask implements Runnable {
+
+
+    private DownloadStatus status;
+    private Lock lock = new ReentrantLock();
+
+
+    public DownloadFIleTask() {
+
+        this.status = new DownloadStatus();
+    }
+
+    @Override
+    public void run() {
+        System.out.println("downloading...");
+        for (int i=0;i < 10_000;i++){
+            if (Thread.currentThread().isInterrupted()) return;
+            status.increamentTotalBytes();
+        }
+
+
+    }
+    public DownloadStatus getStatus() {
+        lock.lock();
+        try {
+            return status;
+        }finally {
+            lock.unlock();
+        }
+    }
+}
+```
+
+باید اون کارمون رو بزاریم توی ترای کچ تا اگه خطا داد دچار خطای دد لاک نشیم 
+#### the synchronized keyword 

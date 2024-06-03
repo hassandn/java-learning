@@ -4278,3 +4278,120 @@ synchronized(){
 }
 ```
 توی پرانتیز چیری که بهش میگن مانیتور آبجکت هست میتونیم this رو به عنوان آبجکت بدیم بهش ولی این بست پرکتیسو نیست 
+```java
+package com.meow;
+
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class DownloadStatus {
+
+        private int totalBytes;
+        private Lock lock = new ReentrantLock();
+
+        public void incramentTotalBytes(){
+                synchronized (this) {
+                    totalBytes++;
+                }
+        }
+
+        public int  getTotalBytes(){
+
+                return totalBytes;
+
+
+        }
+
+}
+
+```
+استفاده از this اشتباه هست مثلا فک کن که ی استیت دیگه داشتیم که بتونه دانلود کنه مثلا اسمش فولدر بود برای اینکه بشماریم چند تا دانلود کرده ی چی مثله همین فایل اینکریمنت داریم حالا مشکل اونجا هست که this که توی هر دو میزاریم یک شئ هست برای همین برای اینکه فولدر اضافه بشه باید صبر کنه کارایه فایل هم تموم بشه و این باعث میشه برنامه دیر تر کار کنه 
+```java
+    package com.meow;
+
+
+    import java.util.concurrent.locks.Lock;
+    import java.util.concurrent.locks.ReentrantLock;
+
+    public class DownloadStatus {
+
+            private int totalFolders;
+            private int totalBytes;
+            private Lock lock = new ReentrantLock();
+
+            public void incramentTotalBytes(){
+                    synchronized (this) {
+                        totalBytes++;
+                    }
+            }
+
+
+            public void increamentTotalFiles(){
+                synchronized (this){
+                    totalFolders ++;
+                }
+            }
+
+
+            public int  getTotalBytes(){
+                    return totalBytes;
+            }
+
+    }
+```
+بهترین راه اینکه برای هرکدوم از اینا ی آبجکت درست کنیم تا کاراشون جدا گونه انجام بشه 
+```java
+    package com.meow;
+
+
+    public class DownloadStatus {
+
+        private int totalBytes;
+        private int totalFolders;
+        private Object totalFoldersLock = new Object();
+        private Object totalBytesLock = new Object();
+        
+
+            public void incramentTotalBytes(){
+                    synchronized (totalBytesLock) {
+                        totalBytes++;
+                    }
+            }
+
+
+            public void increamentTotalFiles(){
+                synchronized (totalFoldersLock){
+                    totalFolders ++;
+                }
+            }
+
+
+            public int  getTotalBytes(){
+                    return totalBytes;
+            }
+
+    }
+```
+ی راه دیگه برای اینکار این هست که توی کلاس از سینکرونایزد استفاده کنیم
+```java
+    package com.meow;
+    public class DownloadStatus {
+
+        private int totalBytes;
+        private int totalFolders;
+        private Object totalFoldersLock = new Object();
+        private Object totalBytesLock = new Object();
+
+            public synchronized void incramentTotalBytes(){
+                        totalBytes++;
+            }
+            public synchronized void increamentTotalFiles(){
+                    totalFolders ++;
+            }
+            public int  getTotalBytes(){
+                    return totalBytes;
+            }
+    }
+```
+البته که این روش مثله همین هست که از this استفاده کرده باشیم 
